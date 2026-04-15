@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { usePfmDispatch, usePfmState } from '../../../app/PfmProvider'
 import { resolveReferenceDate } from '../../../shared/config/referenceDate'
+import { getEffectiveBnplStatementPeriod } from '../../../entities'
 
 function inRange(dateISO: string, from: string, to: string): boolean {
   return dateISO >= from && dateISO <= to
@@ -87,9 +88,7 @@ export function useSpendingCycle() {
           t.paymentMode === 'bnpl' &&
           t.type === 'expense' &&
           !t.installmentConverted &&
-          (t.bnplDeferredToPeriod
-            ? t.bnplDeferredToPeriod === selectedPeriod.id
-            : inRange(t.occurredAt, selectedPeriod.startDate, selectedPeriod.endDate)),
+          getEffectiveBnplStatementPeriod(t, provider.statementDay) === selectedPeriod.id,
       )
       const pendingTxs = txs.filter((t) => !t.settledInStatementPeriod)
       const subtotal = txs.reduce((s, t) => s + t.amount, 0)

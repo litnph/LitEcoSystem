@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Transaction } from '../../../entities'
 import { useTransactionForm } from '../hooks/useTransactionForm'
 import { IconX } from '../../../shared/ui/Icon'
@@ -19,6 +19,9 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export function TransactionModal({ editingTx, onClose }: Props) {
   const f = useTransactionForm(editingTx, onClose)
+  const [categorySearch, setCategorySearch] = useState('')
+  const [categoryPickerOpen, setCategoryPickerOpen] = useState(false)
+  const categoryPickerRef = useRef<HTMLDivElement | null>(null)
   const categoryGroups = useMemo(
     () =>
       f.categories.reduce<Record<string, string[]>>((acc, item) => {
@@ -32,13 +35,40 @@ export function TransactionModal({ editingTx, onClose }: Props) {
     [f.categories],
   )
   const parentOptions = Object.keys(categoryGroups)
-  const hasParentOptions = parentOptions.length > 0
   const [currentParentRaw, currentChildRaw] = f.form.category.split('/')
   const currentParent =
     (currentParentRaw && categoryGroups[currentParentRaw] && currentParentRaw) || ''
-  const childOptions = categoryGroups[currentParent] ?? []
   const currentChild =
-    (currentChildRaw && childOptions.includes(currentChildRaw) && currentChildRaw) || ''
+    (currentChildRaw && (categoryGroups[currentParent] ?? []).includes(currentChildRaw) && currentChildRaw) || ''
+
+  const filteredCategoryGroups = useMemo(() => {
+    const query = categorySearch.trim().toLowerCase()
+    if (!query) {
+      return parentOptions.map((parent) => ({ parent, children: categoryGroups[parent] ?? [] }))
+    }
+    return parentOptions
+      .map((parent) => {
+        const children = categoryGroups[parent] ?? []
+        const parentMatched = parent.toLowerCase().includes(query)
+        if (parentMatched) return { parent, children }
+        return {
+          parent,
+          children: children.filter((child) => child.toLowerCase().includes(query)),
+        }
+      })
+      .filter((group) => group.children.length > 0)
+  }, [categoryGroups, categorySearch, parentOptions])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node
+      if (!categoryPickerRef.current?.contains(target)) {
+        setCategoryPickerOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <div className="modal-backdrop">
@@ -111,49 +141,79 @@ export function TransactionModal({ editingTx, onClose }: Props) {
             </Field>
             <div className="form-field">
               <label className="form-label">Phân loại</label>
-              <div className="grid grid-cols-2 gap-2">
-                <select
-                  value={currentParent}
-                  onChange={(e) => {
-                    const nextParent = e.target.value
-                    if (!nextParent) {
-                      f.update('category', '')
-                      return
-                    }
-                    const nextChild = (categoryGroups[nextParent] ?? [])[0] ?? ''
-                    f.update('category', nextChild ? `${nextParent}/${nextChild}` : `${nextParent}/`)
+              <div className="relative space-y-2" ref={categoryPickerRef}>
+                <button
+                  type="button"
+                  className="form-input flex items-center justify-between text-left"
+                  onClick={() => {
+                    setCategoryPickerOpen((prev) => !prev)
+                    if (!categoryPickerOpen) setCategorySearch('')
                   }}
-                  className="form-select"
                 >
-                  <option value="">{hasParentOptions ? 'Chọn loại cha' : 'Chưa có loại cha'}</option>
-                  {parentOptions.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={currentChild}
-                  onChange={(e) => {
-                    const nextChild = e.target.value
-                    if (!currentParent || !nextChild) {
-                      f.update('category', '')
-                      return
-                    }
-                    f.update('category', `${currentParent}/${nextChild}`)
-                  }}
-                  className="form-select"
-                  disabled={!currentParent}
-                >
-                  <option value="">
-                    {currentParent ? 'Chọn loại con' : 'Chọn loại cha trước'}
-                  </option>
-                  {childOptions.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
+                  <span className={currentParent && currentChild ? 'text-slate-700' : 'text-slate-400'}>
+                    {currentParent && currentChild
+                      ? currentChild
+                      : 'Chọn phân loại'}
+                  </span>
+                  <span className="text-xs text-slate-400">{categoryPickerOpen ? '▲' : '▼'}</span>
+                </button>
+                {categoryPickerOpen && (
+                  <div className="absolute z-50 mt-1 w-full max-w-full rounded-xl border border-slate-200 bg-white p-2 shadow-xl">
+                    <input
+                      value={categorySearch}
+                      onChange={(e) => setCategorySearch(e.target.value)}
+                      placeholder="Tìm phân loại (vd: xăng, ăn, di chuyển...)"
+                      className="form-input mb-2"
+                      autoFocus
+                    />
+                    <div className="max-h-64 overflow-y-auto rounded-lg border border-slate-100 bg-slate-50/40 p-2">
+                      {filteredCategoryGroups.length === 0 ? (
+                        <p className="px-2 py-1 text-xs text-slate-400">Không tìm thấy phân loại phù hợp.</p>
+                      ) : (
+                        filteredCategoryGroups.map(({ parent, children }) => (
+                          <div key={parent} className="mb-2 last:mb-0">
+                            <p className="rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-700">
+                              {parent}
+                            </p>
+                            <div className="mt-1 space-y-1">
+                              {children.map((child) => {
+                                const value = `${parent}/${child}`
+                                const selected = f.form.category === value
+                                return (
+                                  <button
+                                    key={value}
+                                    type="button"
+                                    className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition ${
+                                      selected
+                                        ? 'bg-blue-50 font-semibold text-blue-700'
+                                        : 'bg-white text-slate-700 hover:bg-slate-50'
+                                    }`}
+                                    onClick={() => {
+                                      f.update('category', value)
+                                      setCategoryPickerOpen(false)
+                                    }}
+                                  >
+                                    {child}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+                <p className="text-xs text-slate-500">
+                  Đã chọn:{' '}
+                  {currentParent && currentChild ? (
+                    <span className="font-medium text-slate-700">
+                      {currentParent} / {currentChild}
+                    </span>
+                  ) : (
+                    <span className="text-amber-700">Chưa chọn phân loại</span>
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -189,22 +249,15 @@ export function TransactionModal({ editingTx, onClose }: Props) {
           </div>
 
           {f.form.type === 'expense' && (
-            <>
-              <Field label="Hình thức">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                  {f.sourceMode === 'bnpl'
-                    ? 'Mua trước trả sau (theo cấu hình nguồn tiền)'
-                    : 'Trả liền (theo cấu hình nguồn tiền)'}
-                </div>
-              </Field>
-              {f.sourceMode === 'bnpl' && (
-                <Field label="Ngày sao kê của nguồn trả sau">
-                  <div className="rounded-xl border border-blue-100 bg-blue-50 px-3 py-2 text-sm text-blue-700">
-                    Ngày {f.sourceStatementDay ?? '—'} hàng tháng
-                  </div>
-                </Field>
-              )}
-            </>
+            <Field label="Hình thức">
+              <div className={`rounded-xl border px-3 py-2 text-sm font-medium ${
+                f.sourceMode === 'bnpl'
+                  ? 'border-blue-100 bg-blue-50 text-blue-700'
+                  : 'border-slate-200 bg-slate-50 text-slate-600'
+              }`}>
+                {f.sourceMode === 'bnpl' ? 'Mua trước trả sau (BNPL)' : 'Trả liền'}
+              </div>
+            </Field>
           )}
 
           <Field label="Ghi chú (tuỳ chọn)">

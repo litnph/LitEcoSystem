@@ -4,7 +4,7 @@ import { currencyVnd, formatISODateToVi } from '../../../shared/lib/format'
 import { totalInstallmentChargesForPeriod } from '../../../entities'
 import { BnplStatementModal } from './BnplStatementModal'
 import { IconCheck, IconPlus } from '../../../shared/ui/Icon'
-import { usePfmState } from '../../../app/PfmProvider'
+import { usePfmDispatch, usePfmState } from '../../../app/PfmProvider'
 import { resolveReferenceDate } from '../../../shared/config/referenceDate'
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog'
 
@@ -103,6 +103,7 @@ function PeriodTransactionDropdown({
 export function SpendingCycleView() {
   const c = useSpendingCycle()
   const state = usePfmState()
+  const dispatch = usePfmDispatch()
   const [modal, setModal] = useState<{ providerId: string } | null>(null)
   const [openCreatePeriod, setOpenCreatePeriod] = useState(false)
   const [openEditPeriod, setOpenEditPeriod] = useState(false)
@@ -120,6 +121,7 @@ export function SpendingCycleView() {
   const [editPeriodError, setEditPeriodError] = useState('')
   const [deletePeriodError, setDeletePeriodError] = useState('')
   const [openCloseConfirm, setOpenCloseConfirm] = useState(false)
+  const [pendingUnconfirmStatementId, setPendingUnconfirmStatementId] = useState<string | null>(null)
 
   const modalCtx = modal
     ? c.bnplByProvider.find((g) => g.provider.id === modal.providerId)
@@ -408,18 +410,36 @@ export function SpendingCycleView() {
                   manuallyIncluded: t.manuallyIncludedInStatementPeriod === (c.selectedPeriod?.id ?? ''),
                 }))}
                 rightAction={
-                  <button
-                    type="button"
-                    className="btn-primary btn-sm"
-                    disabled={!g.needsStatement}
-                    onClick={() => setModal({ providerId: g.provider.id })}
-                  >
-                    {g.stmtExists
-                      ? g.stmtStatus === 'paid'
-                        ? 'Đã chốt · Đã thanh toán'
-                        : 'Đã chốt · Chưa thanh toán'
-                      : 'Xác nhận sao kê'}
-                  </button>
+                  g.stmtExists ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-slate-500">
+                        {g.stmtStatus === 'paid' ? 'Đã chốt · Đã thanh toán' : 'Đã chốt · Chưa thanh toán'}
+                      </span>
+                      {g.stmtStatus !== 'paid' && !c.existingClose && (
+                        <button
+                          type="button"
+                          className="btn-ghost btn-sm text-amber-700 hover:bg-amber-50"
+                          onClick={() => {
+                            const stmt = c.confirmedForPeriod.find(
+                              (x) => x.providerId === g.provider.id && x.period === (c.selectedPeriod?.id ?? ''),
+                            )
+                            if (stmt) setPendingUnconfirmStatementId(stmt.id)
+                          }}
+                        >
+                          Hoàn xác nhận
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-primary btn-sm"
+                      disabled={!g.needsStatement}
+                      onClick={() => setModal({ providerId: g.provider.id })}
+                    >
+                      Xác nhận sao kê
+                    </button>
+                  )
                 }
               />
             ))}
@@ -457,6 +477,23 @@ export function SpendingCycleView() {
         onConfirm={() => {
           c.closeMonth()
           setOpenCloseConfirm(false)
+        }}
+      />
+
+      <ConfirmDialog
+        open={!!pendingUnconfirmStatementId}
+        title="Hoàn xác nhận sao kê"
+        message="Bạn muốn hoàn xác nhận sao kê này? Các giao dịch trong sao kê sẽ quay lại trạng thái chưa chốt."
+        confirmText="Hoàn xác nhận"
+        onCancel={() => setPendingUnconfirmStatementId(null)}
+        onConfirm={() => {
+          if (pendingUnconfirmStatementId) {
+            dispatch({
+              type: 'UNCONFIRM_STATEMENT',
+              payload: { statementId: pendingUnconfirmStatementId },
+            })
+          }
+          setPendingUnconfirmStatementId(null)
         }}
       />
 

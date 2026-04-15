@@ -64,6 +64,7 @@ export type PfmAction =
         deferToPeriod: string
       }
     }
+  | { type: 'UNCONFIRM_STATEMENT'; payload: { statementId: string } }
   | { type: 'PAY_CONFIRMED_STATEMENT'; payload: { statementId: string } }
   | {
       type: 'CREATE_INSTALLMENT'
@@ -407,6 +408,35 @@ export function pfmReducer(state: PfmState, action: PfmAction): PfmState {
           s.id === stmt.id ? { ...s, status: 'paid' as const } : s,
         ),
         installmentPlans: updatedPlans,
+      }
+    }
+
+    case 'UNCONFIRM_STATEMENT': {
+      const stmt = state.confirmedStatements.find((s) => s.id === action.payload.statementId)
+      if (!stmt) return state
+      if (stmt.status === 'paid') return state
+      if (state.monthlyCloses.some((close) => close.confirmedStatementIds.includes(stmt.id))) {
+        return state
+      }
+
+      return {
+        ...state,
+        confirmedStatements: state.confirmedStatements.filter((s) => s.id !== stmt.id),
+        transactions: state.transactions.map((t) => {
+          if (
+            t.type !== 'expense' ||
+            t.paymentMode !== 'bnpl' ||
+            t.bnplProviderId !== stmt.providerId ||
+            t.settledInStatementPeriod !== stmt.period
+          ) {
+            return t
+          }
+          return {
+            ...t,
+            settledInStatementPeriod: undefined,
+            manuallyIncludedInStatementPeriod: undefined,
+          }
+        }),
       }
     }
 

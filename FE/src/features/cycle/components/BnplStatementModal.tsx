@@ -63,7 +63,7 @@ export function BnplStatementModal({
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div
-        className="modal-panel-lg max-h-[90vh] overflow-y-auto"
+        className="modal-panel-lg max-h-[90vh] max-w-5xl overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-4">

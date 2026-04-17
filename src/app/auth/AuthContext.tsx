@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { clearSession, loadSession, saveSession, type AuthSession } from './authStorage'
+import { clearSession, loadSession, saveSession, type AuthSession } from '@/shared/lib/auth-storage'
 import { loginApi, logoutApi } from '../../shared/api/auth'
 import { getMenuTreeApi, type MenuNode } from '../../shared/api/menus'
 import { ApiError } from '../../shared/api/client'

@@ -88,9 +88,8 @@ export function TransactionListBoard() {
   const deleteTransaction = useDeleteTransaction()
   const convertToInstallment = useConvertToInstallment()
 
-  const calendarRules = config?.calendarRules
   const bnplProviders = config?.bnplProviders ?? []
-  const installmentMinAmount = calendarRules?.installmentMinAmount ?? 0
+  const calendarRules = config?.calendarRules
 
   const [modalOpen, setModalOpen] = useState(false)
   const [editingTx, setEditingTx] = useState<Transaction | null>(null)
@@ -220,7 +219,11 @@ export function TransactionListBoard() {
                       <td className="data-td">
                         <div className="flex items-center justify-end gap-1">
                           <button type="button" onClick={() => openEdit(t)} className="btn-ghost btn-sm" title="Sửa">Sửa</button>
-                          {t.paymentMode === 'bnpl' && !t.installmentConverted && !t.settledInStatementPeriod && t.amount >= installmentMinAmount && (
+                          {t.paymentMode === 'bnpl' && !t.installmentConverted && !t.settledInStatementPeriod && (() => {
+                            const provider = bnplProviders.find((p) => p.id === t.bnplProviderId)
+                            const limit = provider?.installmentLimit ?? null
+                            return limit === null || t.amount >= limit
+                          })() && (
                             <button type="button" onClick={() => openConvertModal(t)} className="btn-ghost btn-sm text-blue-700 hover:bg-blue-50" title="Chuyển trả góp">Trả góp</button>
                           )}
                           <button type="button" onClick={() => setPendingDelete(t)} className="btn-ghost btn-sm text-red-600 hover:bg-red-50" title="Xoá">Xoá</button>

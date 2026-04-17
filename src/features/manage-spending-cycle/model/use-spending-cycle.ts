@@ -8,6 +8,7 @@ import {
   useCreateSpendingPeriod,
   useUpdateSpendingPeriod,
   useDeleteSpendingPeriod,
+  useCloseSpendingPeriod,
   useConfirmStatement,
 } from './use-cycle-mutations'
 import { useCycleUiStore } from './cycle-ui.store'
@@ -36,6 +37,7 @@ export function useSpendingCycle() {
   const createPeriod = useCreateSpendingPeriod()
   const updatePeriod = useUpdateSpendingPeriod()
   const deletePeriod = useDeleteSpendingPeriod()
+  const closePeriod = useCloseSpendingPeriod()
   const confirmStatement = useConfirmStatement()
 
   const ref = resolveReferenceDate(null)
@@ -84,7 +86,7 @@ export function useSpendingCycle() {
     [txData, selectedPeriod],
   )
 
-  const existingClose = cycleUi.hasClose(selectedPeriod?.id ?? '')
+  const existingClose = selectedPeriod?.closedAt != null
 
   const confirmedForPeriod = useMemo(
     () => (selectedPeriod ? statementsData.filter((s) => s.period === selectedPeriod.id) : []),
@@ -125,20 +127,14 @@ export function useSpendingCycle() {
   const totalBnpl = confirmedForPeriod.reduce((s, x) => s + x.total, 0)
   const net = totalIncome - totalDirect - totalBnpl
 
-  function closeMonth() {
+  async function closeMonth() {
     if (!selectedPeriod || existingClose) return
-    cycleUi.addMonthlyClose({
-      id: `close-${selectedPeriod.id}-${Date.now()}`,
-      period: selectedPeriod.id,
-      closedAt: new Date().toISOString(),
-      directTransactionIds: directTxs.map((t) => t.id),
-      incomeTransactionIds: incomeTxs.map((t) => t.id),
-      confirmedStatementIds: confirmedForPeriod.map((s) => s.id),
-      totalDirect,
-      totalIncome,
-      totalBnpl,
-      net,
-    })
+    await closePeriod.mutateAsync({ id: selectedPeriod.id, close: true })
+  }
+
+  async function reopenMonth() {
+    if (!selectedPeriod || !existingClose) return
+    await closePeriod.mutateAsync({ id: selectedPeriod.id, close: false })
   }
 
   async function addSpendingPeriod(input: { id: string; name?: string; startDate: string; endDate: string }) {
@@ -176,8 +172,9 @@ export function useSpendingCycle() {
   }
 
   async function removeSpendingPeriod(periodId: string) {
-    if (!periods.some((p) => p.id === periodId)) return { ok: false as const, error: 'Kỳ chi tiêu không tồn tại.' }
-    if (cycleUi.hasClose(periodId)) return { ok: false as const, error: 'Không thể xóa kỳ đã chốt.' }
+    const period = periods.find((p) => p.id === periodId)
+    if (!period) return { ok: false as const, error: 'Kỳ chi tiêu không tồn tại.' }
+    if (period.closedAt != null) return { ok: false as const, error: 'Không thể xóa kỳ đã chốt.' }
     if (statementsData.some((x) => x.period === periodId)) return { ok: false as const, error: 'Không thể xóa kỳ đã có sao kê được xác nhận.' }
     try {
       await deletePeriod.mutateAsync(periodId)
@@ -235,6 +232,7 @@ export function useSpendingCycle() {
     totalBnpl,
     net,
     closeMonth,
+    reopenMonth,
     confirmBnplWithDeferrals,
   }
 }

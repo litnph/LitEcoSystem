@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import type { AuthSession } from './authStorage'
+import type { AuthSession } from '@/shared/lib/auth-storage'
 import type { MenuNode } from '../../shared/api/menus'
 
 export type AuthContextValue = {

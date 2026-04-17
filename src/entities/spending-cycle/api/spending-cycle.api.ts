@@ -14,10 +14,13 @@ export type ConfirmedStatement = {
 }
 
 // ── Spending periods ──────────────────────────────────────────
-type SpendingPeriodDto = { id: string; name: string; startDate: string; endDate: string; createdAt: string }
+type SpendingPeriodDto = {
+  id: string; name: string; startDate: string; endDate: string
+  createdAt: string; closedAt: string | null
+}
 
 function mapPeriod(d: SpendingPeriodDto): SpendingPeriod {
-  return { id: d.id, name: d.name, startDate: d.startDate, endDate: d.endDate }
+  return { id: d.id, name: d.name, startDate: d.startDate, endDate: d.endDate, closedAt: d.closedAt ?? null }
 }
 
 export async function getSpendingPeriodsApi(): Promise<SpendingPeriod[]> {
@@ -37,6 +40,15 @@ export async function updateSpendingPeriodApi(id: string, data: { name: string; 
 
 export async function deleteSpendingPeriodApi(id: string): Promise<void> {
   await apiRequest<void>(`/spending-cycles/periods/${id}`, { method: 'DELETE', auth: true })
+}
+
+export async function closeSpendingPeriodApi(id: string, close: boolean): Promise<SpendingPeriod> {
+  const dto = await apiRequest<SpendingPeriodDto>(`/spending-cycles/periods/${id}/close`, {
+    method: 'PATCH',
+    auth: true,
+    body: { close },
+  })
+  return mapPeriod(dto)
 }
 
 // ── Confirmed statements ──────────────────────────────────────

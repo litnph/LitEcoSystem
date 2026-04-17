@@ -13,6 +13,7 @@ export function useConfigurationQuery() {
         data.masterData.paymentSources,
         data.masterData.paymentSourceModes as Record<string, string>,
         data.masterData.paymentSourceStatementDays,
+        data.masterData.paymentSourceInstallmentLimits,
       )
       return { ...data, bnplProviders }
     },

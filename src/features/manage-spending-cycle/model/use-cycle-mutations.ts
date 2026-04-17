@@ -3,6 +3,7 @@ import {
   createSpendingPeriodApi,
   updateSpendingPeriodApi,
   deleteSpendingPeriodApi,
+  closeSpendingPeriodApi,
   confirmStatementApi,
   patchStatementStatusApi,
   type ConfirmStatementPayload,
@@ -31,6 +32,14 @@ export function useDeleteSpendingPeriod() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteSpendingPeriodApi(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: SPENDING_PERIODS_QUERY_KEY }),
+  })
+}
+
+export function useCloseSpendingPeriod() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, close }: { id: string; close: boolean }) => closeSpendingPeriodApi(id, close),
     onSuccess: () => qc.invalidateQueries({ queryKey: SPENDING_PERIODS_QUERY_KEY }),
   })
 }

@@ -6,19 +6,7 @@ export type SpendingPeriod = {
   startDate: string
   /** Inclusive end date (yyyy-mm-dd) */
   endDate: string
+  /** ISO timestamp if the period has been closed, null otherwise */
+  closedAt: string | null
 }
 
-export type MonthlyClose = {
-  id: string
-  /** Calendar month YYYY-MM being closed (e.g. "2026-04") */
-  period: string
-  /** ISO timestamp when close was created */
-  closedAt: string
-  directTransactionIds: string[]
-  incomeTransactionIds: string[]
-  confirmedStatementIds: string[]
-  totalDirect: number
-  totalIncome: number
-  totalBnpl: number
-  net: number
-}

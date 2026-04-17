@@ -249,7 +249,7 @@ export function SpendingCycleBoard() {
       <ConfirmDialog open={openCloseConfirm} title="Xác nhận chốt kỳ chi tiêu"
         message={`Bạn muốn chốt "${selectedPeriodName}" với dữ liệu hiện tại?`} confirmText="Chốt kỳ"
         onCancel={() => setOpenCloseConfirm(false)}
-        onConfirm={() => { c.closeMonth(); setOpenCloseConfirm(false) }}
+        onConfirm={() => { void c.closeMonth().then(() => setOpenCloseConfirm(false)) }}
       />
 
       {openCreatePeriod && (

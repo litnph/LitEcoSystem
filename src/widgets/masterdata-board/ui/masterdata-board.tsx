@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useConfigurationQuery } from '@/entities/user'
-import { useSaveMasterData, useSaveCalendarRules } from '@/features/manage-master-data'
+import { useSaveMasterData } from '@/features/manage-master-data'
 import type { MasterDataApiDto } from '@/features/manage-master-data'
 import { IconPlus, IconX } from '@/shared/ui/Icon'
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog'
-import { currencyVnd } from '@/shared/lib/format'
 
 type SourceMode = 'direct' | 'bnpl'
 type TabId = 'categories' | 'sources' | 'channels'
@@ -584,84 +583,13 @@ function ChannelTagPanel({ draft, setDraft }: { draft: DraftState; setDraft: (fn
   )
 }
 
-function InstallmentRulesPanel() {
-  const { data: config } = useConfigurationQuery()
-  const saveCalendarRules = useSaveCalendarRules()
-  const calendarRules = config?.calendarRules
-
-  const [draft, setDraft] = useState<string>(() => '')
-  const [saved, setSaved] = useState(false)
-  const isInitialized = useRef(false)
-
-  useEffect(() => {
-    if (config) {
-      const amt = (config as { masterData?: { installmentMinAmount?: number } }).masterData?.installmentMinAmount ?? 0
-      if (!isInitialized.current) {
-        setDraft(amt > 0 ? String(amt) : '')
-        isInitialized.current = true
-      }
-    }
-  }, [config])
-
-  const parsed = Number(draft.replace(/[.,\s]/g, ''))
-  const isValid = draft === '' || (Number.isFinite(parsed) && parsed >= 0)
-
-  const handleSave = async () => {
-    if (!isValid || saveCalendarRules.isPending || !calendarRules) return
-    const next = draft === '' ? 0 : parsed
-    await saveCalendarRules.mutateAsync({
-      statementClosingDay: calendarRules.statementClosingDay,
-      paymentDueDay: calendarRules.paymentDueDay,
-      salaryFromDay: calendarRules.salaryFromDay,
-      salaryToDay: calendarRules.salaryToDay,
-      installmentMinAmount: next,
-    })
-    setSaved(true); setTimeout(() => setSaved(false), 1500)
-  }
-
-  const currentMinAmount = (config as { masterData?: { installmentMinAmount?: number } } | undefined)?.masterData?.installmentMinAmount ?? 0
-
-  return (
-    <div className="card p-5 space-y-4">
-      <div>
-        <h3 className="text-sm font-semibold text-[#2C2215]">Quy tắc chuyển trả góp</h3>
-        <p className="text-[11px] text-[#9E8E7C] mt-0.5">
-          Chỉ hiển thị nút <span className="font-medium text-[#7A5E3E]">Trả góp</span> cho giao dịch BNPL đạt hạn mức tối thiểu.
-        </p>
-      </div>
-      <div className="flex items-end gap-3">
-        <div className="form-field flex-1 max-w-xs">
-          <label className="form-label">Hạn mức tối thiểu (VND)</label>
-          <input type="text" inputMode="numeric" value={draft}
-            onChange={(e) => { setDraft(e.target.value); setSaved(false) }}
-            placeholder="0 = không giới hạn"
-            className={`form-input ${!isValid ? 'border-red-300 focus:border-red-400 focus:ring-red-400/20' : ''}`} />
-          {!isValid && <p className="text-[11px] text-red-500 mt-1">Giá trị không hợp lệ.</p>}
-        </div>
-        <button type="button" disabled={!isValid || saveCalendarRules.isPending}
-          onClick={() => { void handleSave() }}
-          className={`btn-primary btn-sm h-10 shrink-0 ${saved ? 'bg-emerald-600 hover:bg-emerald-600' : ''}`}>
-          {saveCalendarRules.isPending ? '...' : saved ? '✓ Đã lưu' : 'Lưu'}
-        </button>
-      </div>
-      <div className="rounded-xl border border-[#EDE6DC] bg-[#F5F0E8] px-4 py-3 text-[12px] text-[#6B5B48]">
-        {currentMinAmount > 0 ? (
-          <span>Hiện tại: chỉ giao dịch <span className="font-semibold text-[#7A5E3E]">≥ {currencyVnd(currentMinAmount)}</span> mới hiển thị nút Trả góp.</span>
-        ) : (
-          <span className="text-[#9E8E7C]">Chưa đặt hạn mức — tất cả giao dịch BNPL đều hiển thị nút Trả góp.</span>
-        )}
-      </div>
-    </div>
-  )
-}
-
 const TABS: { id: TabId; label: string; description: string; icon: string }[] = [
   { id: 'categories', label: 'Phân loại', description: 'Danh mục 2 lớp cha / con', icon: '🗂️' },
   { id: 'sources', label: 'Nguồn tiền', description: 'Tài khoản, thẻ, ví', icon: '💳' },
   { id: 'channels', label: 'Kênh thanh toán', description: 'App, POS, chuyển khoản', icon: '🏷️' },
 ]
 
-function toDraftState(masterData: MasterDataApiDto & { paymentSourceInstallmentLimits?: Record<string, number | null> }): DraftState {
+function toDraftState(masterData: MasterDataApiDto): DraftState {
   return {
     categories: masterData.categories,
     categoryKinds: masterData.categoryKinds,
@@ -690,7 +618,7 @@ export function MasterDataBoard() {
 
   useEffect(() => {
     if (config && !draft) {
-      setDraftRaw(toDraftState(config.masterData as MasterDataApiDto & { paymentSourceInstallmentLimits?: Record<string, number | null> }))
+      setDraftRaw(toDraftState(config.masterData))
     }
   }, [config, draft])
 
@@ -718,6 +646,7 @@ export function MasterDataBoard() {
         paymentSourceDueDays: Object.fromEntries(
           Object.entries(draft.paymentSourceDueDays).map(([k, v]) => [k, v ?? 0]),
         ),
+        paymentSourceInstallmentLimits: draft.paymentSourceInstallmentLimits,
         paymentChannels: draft.paymentChannels,
       })
       setSyncStatus('saved')
@@ -781,8 +710,6 @@ export function MasterDataBoard() {
         {activeTab === 'sources' && <SourcePanel draft={draft} setDraft={setDraft} />}
         {activeTab === 'channels' && <ChannelTagPanel draft={draft} setDraft={setDraft} />}
       </div>
-
-      <InstallmentRulesPanel />
     </div>
   )
 }

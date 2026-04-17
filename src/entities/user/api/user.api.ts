@@ -15,6 +15,7 @@ export type MasterDataApiDto = {
   paymentSourceModes: Record<string, string>
   paymentSourceStatementDays: Record<string, number>
   paymentSourceDueDays: Record<string, number>
+  paymentSourceInstallmentLimits: Record<string, number | null>
   paymentChannels: string[]
 }
 

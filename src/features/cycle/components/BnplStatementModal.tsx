@@ -66,22 +66,22 @@ export function BnplStatementModal({
         className="modal-panel-lg max-h-[90vh] max-w-5xl overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between border-b border-slate-100 px-6 py-4">
+        <div className="flex items-start justify-between border-b border-[#EDE6DC] px-6 py-4">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-[#2C2215]">
               {readonly ? 'Tóm tắt' : 'Chốt'} sao kê — {provider.name}
             </h2>
-            <p className="mt-0.5 text-xs text-slate-400">
+            <p className="mt-0.5 text-xs text-[#9E8E7C]">
               Kỳ {formatPeriodVi(period)} · Ngày chốt sao kê hàng tháng: {provider.statementDay}
             </p>
-            <p className="mt-1 text-[11px] text-slate-400">
+            <p className="mt-1 text-[11px] text-[#9E8E7C]">
               Bỏ chọn giao dịch = hoãn sang kỳ {formatPeriodVi(nextPeriod(period))}.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100"
+            className="rounded-lg p-1.5 text-[#9E8E7C] hover:bg-[#EDE6DC]"
           >
             ✕
           </button>
@@ -89,9 +89,9 @@ export function BnplStatementModal({
 
         <div className="space-y-4 p-6">
           <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-xl bg-slate-50 px-3 py-2">
-              <dt className="text-[10px] font-semibold uppercase text-slate-400">Giao dịch chọn</dt>
-              <dd className="text-sm font-bold text-slate-800">{currencyVnd(subtotal)}</dd>
+            <div className="rounded-xl bg-[#F5F0E8] px-3 py-2">
+              <dt className="text-[10px] font-semibold uppercase text-[#9E8E7C]">Giao dịch chọn</dt>
+              <dd className="text-sm font-bold text-[#3E3025]">{currencyVnd(subtotal)}</dd>
             </div>
             {installmentCharges > 0 && (
               <div className="rounded-xl bg-rose-50 px-3 py-2">
@@ -99,20 +99,20 @@ export function BnplStatementModal({
                 <dd className="text-sm font-bold text-rose-600">+{currencyVnd(installmentCharges)}</dd>
               </div>
             )}
-            <div className="rounded-xl bg-blue-50 px-3 py-2 sm:col-span-1">
-              <dt className="text-[10px] font-semibold uppercase text-blue-600">Tổng sao kê</dt>
-              <dd className="text-lg font-bold text-blue-700">{currencyVnd(finalAmount)}</dd>
+            <div className="rounded-xl bg-[#EFE3D2] px-3 py-2 sm:col-span-1">
+              <dt className="text-[10px] font-semibold uppercase text-[#7A5E3E]">Tổng sao kê</dt>
+              <dd className="text-lg font-bold text-[#5C3A1E]">{currencyVnd(finalAmount)}</dd>
             </div>
           </dl>
 
           {transactions.length === 0 && additionalTransactions.length === 0 ? (
-            <p className="py-6 text-center text-sm text-slate-400">
+            <p className="py-6 text-center text-sm text-[#9E8E7C]">
               Không có giao dịch BNPL mở trong kỳ này.
             </p>
           ) : (
             <div className="space-y-4">
               <div className="overflow-x-auto">
-                <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Giao dịch trong kỳ sao kê</p>
+                <p className="mb-2 text-xs font-semibold uppercase text-[#9E8E7C]">Giao dịch trong kỳ sao kê</p>
                 <table className="data-table min-w-[640px]">
                   <thead>
                     <tr>
@@ -139,8 +139,8 @@ export function BnplStatementModal({
                               <span
                                 className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition ${
                                   sel
-                                    ? 'border-blue-600 bg-blue-600'
-                                    : 'border-slate-300 bg-white'
+                                    ? 'border-[#7A5E3E] bg-[#7A5E3E]'
+                                    : 'border-[#D4C9BE] bg-white'
                                 }`}
                                 onClick={(e) => {
                                   e.stopPropagation()
@@ -155,14 +155,14 @@ export function BnplStatementModal({
                               </span>
                             </td>
                           )}
-                          <td className="data-td text-xs text-slate-500">
+                          <td className="data-td text-xs text-[#9E8E7C]">
                             {formatISODateToVi(item.occurredAt)}
                           </td>
-                          <td className="data-td font-medium text-slate-900">{item.merchant}</td>
+                          <td className="data-td font-medium text-[#2C2215]">{item.merchant}</td>
                           <td className="data-td">
                             <span className="badge-slate">{item.category}</span>
                           </td>
-                          <td className="data-td text-right font-semibold text-slate-900">
+                          <td className="data-td text-right font-semibold text-[#2C2215]">
                             {currencyVnd(item.amount)}
                           </td>
                         </tr>
@@ -173,7 +173,7 @@ export function BnplStatementModal({
               </div>
               {additionalTransactions.length > 0 && (
                 <div className="overflow-x-auto">
-                  <p className="mb-2 text-xs font-semibold uppercase text-slate-500">
+                  <p className="mb-2 text-xs font-semibold uppercase text-[#9E8E7C]">
                     Giao dịch cùng nguồn, chưa sao kê (có thể thêm vào kỳ này)
                   </p>
                   <table className="data-table min-w-[640px]">
@@ -201,9 +201,9 @@ export function BnplStatementModal({
                               <td className="data-td w-10">
                                 <span
                                   className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition ${
-                                    sel
-                                      ? 'border-blue-600 bg-blue-600'
-                                      : 'border-slate-300 bg-white'
+                                      sel
+                                      ? 'border-[#7A5E3E] bg-[#7A5E3E]'
+                                      : 'border-[#D4C9BE] bg-white'
                                   }`}
                                   onClick={(e) => {
                                     e.stopPropagation()
@@ -218,14 +218,14 @@ export function BnplStatementModal({
                                 </span>
                               </td>
                             )}
-                            <td className="data-td text-xs text-slate-500">
+                            <td className="data-td text-xs text-[#9E8E7C]">
                               {formatISODateToVi(item.occurredAt)}
                             </td>
-                            <td className="data-td font-medium text-slate-900">{item.merchant}</td>
+                            <td className="data-td font-medium text-[#2C2215]">{item.merchant}</td>
                             <td className="data-td">
                               <span className="badge-slate">{item.category}</span>
                             </td>
-                            <td className="data-td text-right font-semibold text-slate-900">
+                            <td className="data-td text-right font-semibold text-[#2C2215]">
                               {currencyVnd(item.amount)}
                             </td>
                           </tr>
@@ -239,7 +239,7 @@ export function BnplStatementModal({
           )}
         </div>
 
-        <div className="flex flex-wrap justify-end gap-2 border-t border-slate-100 px-6 py-4">
+        <div className="flex flex-wrap justify-end gap-2 border-t border-[#EDE6DC] px-6 py-4">
           <button type="button" onClick={onClose} className="btn-ghost">
             {readonly ? 'Đóng' : 'Hủy'}
           </button>

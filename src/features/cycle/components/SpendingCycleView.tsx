@@ -48,21 +48,21 @@ function PeriodTransactionDropdown({
 }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-100 bg-white">
+    <div className="overflow-hidden rounded-xl border border-[#E4D9CE] bg-white">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-slate-50"
+        className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#F9F6F2]"
       >
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-slate-900">{title}</p>
-          <p className="text-xs text-slate-500">{count} giao dịch</p>
+          <p className="text-sm font-semibold text-[#2C2215]">{title}</p>
+          <p className="text-xs text-[#9E8E7C]">{count} giao dịch</p>
         </div>
-        <p className="text-sm font-bold text-slate-800">{currencyVnd(total)}</p>
-        <span className="text-slate-400">{open ? '▲' : '▼'}</span>
+        <p className="text-sm font-bold text-[#3E3025]">{currencyVnd(total)}</p>
+        <span className="text-[#9E8E7C]">{open ? '▲' : '▼'}</span>
       </button>
-      <div className="flex items-center justify-between border-t border-slate-100 px-4 py-2">
-        <p className="text-[11px] text-slate-500">
+      <div className="flex items-center justify-between border-t border-[#EDE6DC] px-4 py-2">
+        <p className="text-[11px] text-[#9E8E7C]">
           {rows.length === 0 ? 'Không có giao dịch cần hiển thị.' : 'Danh sách giao dịch trong kỳ'}
         </p>
         {rightAction}
@@ -80,8 +80,8 @@ function PeriodTransactionDropdown({
           <tbody>
             {rows.map((t) => (
               <tr key={t.id} className="data-tr">
-                <td className="data-td text-slate-500">{formatISODateToVi(t.occurredAt)}</td>
-                <td className="data-td font-medium text-slate-800">
+                <td className="data-td text-[#9E8E7C]">{formatISODateToVi(t.occurredAt)}</td>
+                <td className="data-td font-medium text-[#3E3025]">
                   <span className="inline-flex items-center gap-2">
                     {t.merchant}
                     {t.manuallyIncluded && <span className="badge-amber text-[10px]">Thêm tay</span>}
@@ -90,7 +90,7 @@ function PeriodTransactionDropdown({
                 <td className="data-td">
                   <span className="badge-slate">{t.category}</span>
                 </td>
-                <td className="data-td text-right font-semibold text-slate-800">{currencyVnd(t.amount)}</td>
+                <td className="data-td text-right font-semibold text-[#3E3025]">{currencyVnd(t.amount)}</td>
               </tr>
             ))}
           </tbody>
@@ -215,15 +215,15 @@ export function SpendingCycleView() {
       <div className="grid gap-5 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)]">
         {/* ── Cột trái: danh sách kỳ ── */}
         <aside className="card h-fit overflow-hidden p-0 lg:sticky lg:top-[88px]">
-          <div className="border-b border-slate-100 px-4 py-3">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="border-b border-[#EDE6DC] px-4 py-3">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
               Kỳ chi tiêu
             </h2>
-            <p className="mt-0.5 text-[11px] text-slate-400">
+            <p className="mt-0.5 text-[11px] text-[#9E8E7C]">
               Sao kê thẻ: chốt ngày {c.cycleDay} mỗi tháng (khoảng {c.cycleDay + 1} tháng trước → {c.cycleDay}{' '}
               tháng này, theo ngày giao dịch).
             </p>
-            <p className="mt-1 text-[10px] leading-snug text-slate-500">
+            <p className="mt-1 text-[10px] leading-snug text-[#9E8E7C]">
               Gợi ý ngân sách: lương thường {state.calendarRules.salaryFromDay}–{state.calendarRules.salaryToDay}{' '}
               · Hạn trả thẻ ngày {state.calendarRules.paymentDueDay} tháng sau kỳ sao kê (chỉnh trong Cấu hình).
             </p>
@@ -245,7 +245,7 @@ export function SpendingCycleView() {
               Thêm kỳ
             </button>
           </div>
-          <ul className="max-h-[min(70vh,520px)] divide-y divide-slate-100 overflow-y-auto">
+          <ul className="max-h-[min(70vh,520px)] divide-y divide-[#EDE6DC] overflow-y-auto">
             {c.periods.map((p) => {
               const openBnpl = c.bnplByProvider.reduce((n, g) => {
                 if (p.id !== c.selectedPeriod?.id) return n
@@ -258,13 +258,13 @@ export function SpendingCycleView() {
                     type="button"
                     onClick={() => c.setSelectedPeriodId(p.id)}
                     className={`flex w-full flex-col gap-1 px-4 py-3 text-left transition ${
-                      isSel ? 'bg-blue-50' : 'hover:bg-slate-50'
+                      isSel ? 'bg-[#EFE3D2]' : 'hover:bg-[#F9F6F2]'
                     }`}
                   >
-                    <span className={`text-sm font-semibold ${isSel ? 'text-blue-800' : 'text-slate-800'}`}>
+                    <span className={`text-sm font-semibold ${isSel ? 'text-[#5C3A1E]' : 'text-[#3E3025]'}`}>
                       {p.name}
                     </span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-[#9E8E7C]">
                       {formatISODateToVi(p.startDate)} - {formatISODateToVi(p.endDate)}
                     </span>
                     <span className="flex flex-wrap items-center gap-1.5">
@@ -287,12 +287,12 @@ export function SpendingCycleView() {
           <div className="card p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">{selectedPeriodName}</h2>
-                <p className="text-xs text-slate-400">
+                <h2 className="text-lg font-semibold text-[#2C2215]">{selectedPeriodName}</h2>
+                <p className="text-xs text-[#9E8E7C]">
                   Thu / chi trực tiếp theo cùng chu kỳ · Nhiều sao kê BNPL có thể chốt trong một kỳ
                 </p>
                 {c.selectedPeriod && (
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-[#9E8E7C]">
                     Khoảng thời gian: {formatISODateToVi(c.selectedPeriod.startDate)} - {formatISODateToVi(c.selectedPeriod.endDate)}
                   </p>
                 )}
@@ -343,17 +343,17 @@ export function SpendingCycleView() {
                 <dt className="text-[10px] font-semibold uppercase text-emerald-600">Thu nhập</dt>
                 <dd className="text-sm font-bold text-emerald-700">+{currencyVnd(c.totalIncome)}</dd>
               </div>
-              <div className="rounded-xl bg-slate-50 p-3">
-                <dt className="text-[10px] font-semibold uppercase text-slate-500">Chi trực tiếp</dt>
-                <dd className="text-sm font-bold text-slate-800">{currencyVnd(c.totalDirect)}</dd>
+              <div className="rounded-xl bg-[#F5F0E8] p-3">
+                <dt className="text-[10px] font-semibold uppercase text-[#9E8E7C]">Chi trực tiếp</dt>
+                <dd className="text-sm font-bold text-[#3E3025]">{currencyVnd(c.totalDirect)}</dd>
               </div>
               <div className="rounded-xl bg-rose-50 p-3">
                 <dt className="text-[10px] font-semibold uppercase text-rose-500">Sao kê BNPL (đã chốt)</dt>
                 <dd className="text-sm font-bold text-rose-600">{currencyVnd(c.totalBnpl)}</dd>
               </div>
-              <div className={`rounded-xl p-3 ${c.net >= 0 ? 'bg-blue-50' : 'bg-rose-50'}`}>
-                <dt className="text-[10px] font-semibold uppercase text-slate-600">Còn lại</dt>
-                <dd className={`text-sm font-bold ${c.net >= 0 ? 'text-blue-700' : 'text-rose-700'}`}>
+              <div className={`rounded-xl p-3 ${c.net >= 0 ? 'bg-[#EAF3EC]' : 'bg-rose-50'}`}>
+                <dt className="text-[10px] font-semibold uppercase text-[#6B5B48]">Còn lại</dt>
+                <dd className={`text-sm font-bold ${c.net >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
                   {c.net >= 0 ? '+' : ''}
                   {currencyVnd(c.net)}
                 </dd>
@@ -380,7 +380,7 @@ export function SpendingCycleView() {
           </div>
 
           <div className="card space-y-3 p-4">
-            <h3 className="text-sm font-semibold text-slate-900">Chi tiết kỳ chi tiêu</h3>
+            <h3 className="text-sm font-semibold text-[#2C2215]">Chi tiết kỳ chi tiêu</h3>
             {c.directTxs.length > 0 && (
               <PeriodTransactionDropdown
                 title="Giao dịch trực tiếp"
@@ -412,7 +412,7 @@ export function SpendingCycleView() {
                 rightAction={
                   g.stmtExists ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-slate-500">
+                      <span className="text-[11px] text-[#9E8E7C]">
                         {g.stmtStatus === 'paid' ? 'Đã chốt · Đã thanh toán' : 'Đã chốt · Chưa thanh toán'}
                       </span>
                       {g.stmtStatus !== 'paid' && !c.existingClose && (
@@ -500,7 +500,7 @@ export function SpendingCycleView() {
       {openCreatePeriod && (
         <div className="modal-backdrop" onClick={() => setOpenCreatePeriod(false)}>
           <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-base font-semibold text-slate-900">Tạo kỳ chi tiêu</h3>
+            <h3 className="text-base font-semibold text-[#2C2215]">Tạo kỳ chi tiêu</h3>
             <div className="mt-4 space-y-3">
               <div className="form-field">
                 <label className="form-label">Mã kỳ (duy nhất)</label>
@@ -619,11 +619,11 @@ export function SpendingCycleView() {
       {openEditPeriod && c.selectedPeriod && (
         <div className="modal-backdrop" onClick={() => setOpenEditPeriod(false)}>
           <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-base font-semibold text-slate-900">Chỉnh sửa kỳ chi tiêu</h3>
+            <h3 className="text-base font-semibold text-[#2C2215]">Chỉnh sửa kỳ chi tiêu</h3>
             <div className="mt-4 space-y-3">
               <div className="form-field">
                 <label className="form-label">Mã kỳ</label>
-                <input value={c.selectedPeriod.id} className="form-input bg-slate-50" disabled />
+                <input value={c.selectedPeriod.id} className="form-input opacity-60" disabled />
               </div>
               <div className="form-field">
                 <label className="form-label">Tên kỳ</label>
@@ -699,8 +699,8 @@ export function SpendingCycleView() {
       {openDeletePeriodConfirm && (
         <div className="modal-backdrop" onClick={() => setOpenDeletePeriodConfirm(false)}>
           <div className="modal-panel max-w-md" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-base font-semibold text-slate-900">Xóa kỳ chi tiêu</h3>
-            <p className="mt-2 text-sm text-slate-500">
+            <h3 className="text-base font-semibold text-[#2C2215]">Xóa kỳ chi tiêu</h3>
+            <p className="mt-2 text-sm text-[#6B5B48]">
               Bạn muốn xóa kỳ "{selectedPeriodName}"? Thao tác này không thể hoàn tác.
             </p>
             {deletePeriodError && (

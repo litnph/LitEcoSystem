@@ -189,8 +189,8 @@ export function TransactionsView() {
       {/* ── Toolbar ── */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Giao dịch</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-base font-semibold text-[#2C2215]">Giao dịch</h2>
+          <p className="text-xs text-[#9E8E7C]">
             {filtered.length} giao dịch
             {activeCount > 0 ? ` (đã lọc từ ${state.transactions.length})` : ''}
           </p>
@@ -201,9 +201,9 @@ export function TransactionsView() {
         </button>
       </div>
 
-      <div className="card border-blue-100 bg-blue-50/80 p-4">
-        <p className="text-xs font-semibold text-blue-900">Theo lịch bạn đã cấu hình</p>
-        <p className="mt-1 text-[11px] leading-relaxed text-blue-800/90">
+      <div className="card p-4" style={{ background: 'var(--cl-sidebar)', borderColor: 'var(--cl-border)' }}>
+        <p className="text-xs font-semibold text-[#3E3025]">Theo lịch bạn đã cấu hình</p>
+        <p className="mt-1 text-[11px] leading-relaxed text-[#6B5B48]">
           Sao kê trả sau chốt ngày <strong>{state.calendarRules.statementClosingDay}</strong> hàng tháng · Hạn
           thanh toán thẻ ngày <strong>{state.calendarRules.paymentDueDay}</strong> (tháng sau kỳ sao kê) · Lương
           thường về <strong>
@@ -212,13 +212,13 @@ export function TransactionsView() {
           mỗi tháng. Kỳ chi tiêu (menu bên cạnh) nên đặt theo tháng lương (vd 01→cuối tháng); sao kê thẻ tính
           theo ngân hàng.
         </p>
-        <p className="mt-2 text-[10px] text-blue-700/80">Đổi các giá trị này tại menu Cấu hình.</p>
+        <p className="mt-2 text-[10px] text-[#9E8E7C]">Đổi các giá trị này tại menu Cấu hình.</p>
       </div>
 
       {/* ── Quick stats ── */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <div className="card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
             Thu nhập
           </p>
           <p className="mt-1.5 text-lg font-bold text-emerald-600">
@@ -226,7 +226,7 @@ export function TransactionsView() {
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
             Chi tiêu
           </p>
           <p className="mt-1.5 text-lg font-bold text-red-600">
@@ -234,7 +234,7 @@ export function TransactionsView() {
           </p>
         </div>
         <div className="card p-4 col-span-2 sm:col-span-1">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
             Chênh lệch
           </p>
           <p
@@ -262,7 +262,7 @@ export function TransactionsView() {
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <p className="text-4xl">🔍</p>
-            <p className="font-semibold text-slate-700">Không tìm thấy giao dịch</p>
+            <p className="font-semibold text-[#3E3025]">Không tìm thấy giao dịch</p>
             {activeCount > 0 && (
               <button
                 type="button"
@@ -294,7 +294,7 @@ export function TransactionsView() {
                   const badge = businessBadge(t)
                   return (
                   <tr key={t.id} className="data-tr group">
-                    <td className="data-td text-xs text-slate-500">
+                    <td className="data-td text-xs text-[#9E8E7C]">
                       {formatISODateToVi(t.occurredAt)}
                     </td>
                     <td className="data-td">
@@ -304,7 +304,7 @@ export function TransactionsView() {
                         <span className="badge-red">Chi</span>
                       )}
                     </td>
-                    <td className="data-td font-medium text-slate-900 max-w-[160px]">
+                    <td className="data-td font-medium text-[#2C2215] max-w-[160px]">
                       <span className="block truncate">{t.merchant}</span>
                       {badge && (
                         <span className={`mt-1 inline-flex ${badge.className}`}>
@@ -312,19 +312,19 @@ export function TransactionsView() {
                         </span>
                       )}
                       {(t.businessType === 'advance_payment' || t.businessType === 'loan_given' || t.businessType === 'loan_borrowed') && t.counterpartyName && (
-                        <span className="mt-1 block truncate text-xs text-slate-500">
+                        <span className="mt-1 block truncate text-xs text-[#9E8E7C]">
                           Đối tác: {t.counterpartyName}
                         </span>
                       )}
                       {t.note && (
-                        <span className="block truncate text-xs text-slate-400">{t.note}</span>
+                        <span className="block truncate text-xs text-[#BFB0A0]">{t.note}</span>
                       )}
                     </td>
-                    <td className="data-td text-slate-500">{t.channel}</td>
+                    <td className="data-td text-[#9E8E7C]">{t.channel}</td>
                     <td className="data-td">
                       <span className="badge-slate">{t.category}</span>
                     </td>
-                    <td className="data-td text-slate-500">{t.source}</td>
+                    <td className="data-td text-[#9E8E7C]">{t.source}</td>
                     <td className="data-td">
                       {t.paymentMode === 'bnpl' ? (
                         <span className="badge-blue">
@@ -409,8 +409,8 @@ export function TransactionsView() {
       {convertingTx && (
         <div className="modal-backdrop">
           <div className="modal-panel">
-            <h3 className="text-base font-semibold text-slate-900">Chuyển giao dịch sang trả góp</h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <h3 className="text-base font-semibold text-[#2C2215]">Chuyển giao dịch sang trả góp</h3>
+            <p className="mt-1 text-sm text-[#6B5B48]">
               {convertingTx.merchant} · {currencyVnd(convertingTx.amount)}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
@@ -445,7 +445,7 @@ export function TransactionsView() {
                 />
               </div>
             </div>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-[#9E8E7C]">
               Sau khi chuyển đổi, giao dịch gốc sẽ không còn tính trực tiếp vào kỳ sao kê; hệ thống sẽ phát sinh kỳ trả góp và phí chuyển đổi.
             </p>
             <div className="mt-5 flex gap-3">

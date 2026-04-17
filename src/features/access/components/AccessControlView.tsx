@@ -50,8 +50,8 @@ export function AccessControlView() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-slate-900">Quản lý user & phân quyền</h2>
-        <p className="text-xs text-slate-400">
+        <h2 className="text-base font-semibold text-[#2C2215]">Quản lý user & phân quyền</h2>
+        <p className="text-xs text-[#9E8E7C]">
           Dữ liệu lấy từ API user/role. Chỉnh sửa quyền sẽ bổ sung ở bước tiếp theo.
         </p>
       </div>
@@ -63,37 +63,37 @@ export function AccessControlView() {
       </div>
 
       <div className="card p-5">
-        <h3 className="text-sm font-semibold text-slate-900">Danh sách role</h3>
+        <h3 className="text-sm font-semibold text-[#2C2215]">Danh sách role</h3>
         <div className="mt-3 flex flex-wrap gap-2">
           {roles.length > 0 ? (
             roles.map((role) => (
               <span
                 key={role}
-                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
+                className="rounded-full border border-[#D4C9BE] bg-[#EFE3D2] px-3 py-1 text-xs font-semibold text-[#7A5E3E]"
               >
                 {role}
               </span>
             ))
           ) : (
-            <p className="text-xs text-slate-400">Chưa có role nào.</p>
+            <p className="text-xs text-[#9E8E7C]">Chưa có role nào.</p>
           )}
         </div>
       </div>
 
       <div className="card overflow-hidden">
-        <div className="border-b border-slate-100 px-5 py-3">
-          <h3 className="text-sm font-semibold text-slate-900">Danh sách user</h3>
+        <div className="border-b border-[#EDE6DC] px-5 py-3">
+          <h3 className="text-sm font-semibold text-[#2C2215]">Danh sách user</h3>
         </div>
         {loading ? (
-          <p className="px-5 py-8 text-sm text-slate-500">Đang tải dữ liệu...</p>
+          <p className="px-5 py-8 text-sm text-[#9E8E7C]">Đang tải dữ liệu...</p>
         ) : error ? (
           <p className="px-5 py-8 text-sm text-red-600">{error}</p>
         ) : users.length === 0 ? (
-          <p className="px-5 py-8 text-sm text-slate-500">Không có user nào.</p>
+          <p className="px-5 py-8 text-sm text-[#9E8E7C]">Không có user nào.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100 text-sm">
-              <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+            <table className="min-w-full divide-y divide-[#EDE6DC] text-sm">
+              <thead className="bg-[#F5F0E8] text-xs uppercase tracking-wider text-[#9E8E7C]">
                 <tr>
                   <th className="px-5 py-3 text-left">User</th>
                   <th className="px-5 py-3 text-left">Email</th>
@@ -101,34 +101,34 @@ export function AccessControlView() {
                   <th className="px-5 py-3 text-left">Trạng thái</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-[#EDE6DC] bg-white">
                 {users.map((user) => (
                   <tr key={user.id}>
                     <td className="px-5 py-3">
-                      <p className="font-medium text-slate-800">{user.fullName}</p>
-                      <p className="text-xs text-slate-400">@{user.username}</p>
+                      <p className="font-medium text-[#3E3025]">{user.fullName}</p>
+                      <p className="text-xs text-[#9E8E7C]">@{user.username}</p>
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{user.email}</td>
+                    <td className="px-5 py-3 text-[#6B5B48]">{user.email}</td>
                     <td className="px-5 py-3">
                       <div className="flex flex-wrap gap-1.5">
                         {(user.roles ?? []).length > 0 ? (
                           user.roles.map((role) => (
                             <span
                               key={`${user.id}-${role}`}
-                              className="rounded-md border border-slate-200 px-2 py-0.5 text-xs text-slate-600"
+                              className="rounded-md border border-[#E4D9CE] px-2 py-0.5 text-xs text-[#6B5B48]"
                             >
                               {role}
                             </span>
                           ))
                         ) : (
-                          <span className="text-xs text-slate-400">Chưa gán quyền</span>
+                          <span className="text-xs text-[#9E8E7C]">Chưa gán quyền</span>
                         )}
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                          user.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                          user.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-[#EDE6DC] text-[#9E8E7C]'
                         }`}
                       >
                         {user.isActive ? 'Active' : 'Inactive'}
@@ -148,8 +148,8 @@ export function AccessControlView() {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="card p-4">
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="mt-1 text-xl font-semibold text-slate-900">{value}</p>
+      <p className="text-xs text-[#9E8E7C]">{label}</p>
+      <p className="mt-1 text-xl font-semibold text-[#2C2215]">{value}</p>
     </div>
   )
 }

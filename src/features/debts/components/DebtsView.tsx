@@ -24,12 +24,12 @@ export function DebtsView() {
   return (
     <div className="space-y-6">
       {/* ── Metric ── */}
-      <div className="card-metric bg-gradient-to-br from-slate-700 to-slate-900 p-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <div className="card-metric bg-gradient-to-br from-[#8B6F4E] to-[#4E3420] p-6">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#D9CCB8]">
           Tổng dư nợ còn lại
         </p>
         <p className="mt-2 text-3xl font-bold">{currencyVnd(totalRemaining)}</p>
-        <p className="mt-1 text-xs text-slate-400">
+        <p className="mt-1 text-xs text-[#C4B5A5]">
           {d.debts.filter((x) => x.status === 'active').length} khoản đang hoạt động
         </p>
       </div>
@@ -37,11 +37,11 @@ export function DebtsView() {
       <div className="grid gap-6 xl:grid-cols-[300px_1fr]">
         {/* ── Form ── */}
         <div className="card p-5">
-          <div className="flex items-center gap-2 pb-4 border-b border-slate-100">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-700">
+          <div className="flex items-center gap-2 pb-4 border-b border-[#EDE6DC]">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#62492E]">
               <IconPlus className="h-4 w-4 text-white" />
             </span>
-            <h2 className="text-sm font-semibold text-slate-900">Thêm vay / công nợ</h2>
+            <h2 className="text-sm font-semibold text-[#2C2215]">Thêm vay / công nợ</h2>
           </div>
 
           <div className="mt-4 space-y-4">
@@ -85,18 +85,18 @@ export function DebtsView() {
 
         {/* ── Debt list ── */}
         <div className="card overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-            <h2 className="text-sm font-semibold text-slate-900">Danh sách công nợ</h2>
+          <div className="flex items-center justify-between border-b border-[#EDE6DC] px-5 py-4">
+            <h2 className="text-sm font-semibold text-[#2C2215]">Danh sách công nợ</h2>
             <span className="badge-slate">{d.debts.length} khoản</span>
           </div>
 
           {d.debts.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
               <p className="text-4xl">🏦</p>
-              <p className="text-sm font-medium text-slate-500">Chưa có khoản vay nào</p>
+              <p className="text-sm font-medium text-[#9E8E7C]">Chưa có khoản vay nào</p>
             </div>
           ) : (
-            <ul className="divide-y divide-slate-50 p-4">
+            <ul className="divide-y divide-[#EDE6DC] p-4">
               {d.debts.map((row) => {
                 const remaining = remainingDebt(row)
                 const pct = Math.min(100, Math.round((row.paidAmount / row.principal) * 100))
@@ -104,8 +104,8 @@ export function DebtsView() {
                   <li key={row.id} className="py-4 first:pt-0 last:pb-0">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <p className="font-semibold text-slate-900">{row.title}</p>
-                        <p className="mt-0.5 text-xs text-slate-500">
+                        <p className="font-semibold text-[#2C2215]">{row.title}</p>
+                        <p className="mt-0.5 text-xs text-[#9E8E7C]">
                           Chủ nợ: {row.lender} · Hạn: {formatISODateToVi(row.dueDate)}
                         </p>
                       </div>
@@ -131,9 +131,9 @@ export function DebtsView() {
                     </div>
 
                     <div className="mt-3 grid grid-cols-3 gap-3 text-xs">
-                      <div className="rounded-xl bg-slate-50 px-3 py-2">
-                        <p className="text-slate-400">Gốc</p>
-                        <p className="mt-0.5 font-semibold text-slate-700">
+                      <div className="rounded-xl bg-[#F5F0E8] px-3 py-2">
+                        <p className="text-[#9E8E7C]">Gốc</p>
+                        <p className="mt-0.5 font-semibold text-[#3E3025]">
                           {currencyVnd(row.principal)}
                         </p>
                       </div>
@@ -152,13 +152,13 @@ export function DebtsView() {
                     </div>
 
                     <div className="mt-3 flex items-center gap-3">
-                      <div className="flex-1 overflow-hidden rounded-full bg-slate-100 h-1.5">
+                      <div className="flex-1 overflow-hidden rounded-full bg-[#EDE6DC] h-1.5">
                         <div
                           className="h-full rounded-full bg-emerald-500 transition-all"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="shrink-0 text-xs text-slate-400">{pct}% đã trả</span>
+                      <span className="shrink-0 text-xs text-[#9E8E7C]">{pct}% đã trả</span>
                     </div>
                   </li>
                 )
@@ -172,8 +172,8 @@ export function DebtsView() {
       {d.paymentDebtId && (
         <div className="modal-backdrop">
           <div className="modal-panel">
-            <h3 className="text-base font-semibold text-slate-900">Ghi nhận trả nợ</h3>
-            <p className="mt-0.5 text-sm text-slate-500">
+            <h3 className="text-base font-semibold text-[#2C2215]">Ghi nhận trả nợ</h3>
+            <p className="mt-0.5 text-sm text-[#6B5B48]">
               {d.debts.find((x) => x.id === d.paymentDebtId)?.title}
             </p>
 
@@ -205,26 +205,26 @@ export function DebtsView() {
 
       {/* ── Installment management quick view ── */}
       <div className="card overflow-hidden">
-        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-          <h2 className="text-sm font-semibold text-slate-900">Danh sách trả góp</h2>
+        <div className="flex items-center justify-between border-b border-[#EDE6DC] px-5 py-4">
+          <h2 className="text-sm font-semibold text-[#2C2215]">Danh sách trả góp</h2>
           <span className="badge-slate">{state.installmentPlans.length} kế hoạch</span>
         </div>
         {state.installmentPlans.length === 0 ? (
-          <p className="px-5 py-8 text-sm text-slate-400">Chưa có khoản trả góp nào.</p>
+          <p className="px-5 py-8 text-sm text-[#9E8E7C]">Chưa có khoản trả góp nào.</p>
         ) : (
-          <ul className="divide-y divide-slate-100 px-5">
+          <ul className="divide-y divide-[#EDE6DC] px-5">
             {state.installmentPlans.map((p) => (
               <li key={p.id} className="flex items-center justify-between py-3 text-sm">
                 <div>
-                  <p className="font-medium text-slate-800">
+                  <p className="font-medium text-[#3E3025]">
                     {state.bnplProviders.find((x) => x.id === p.providerId)?.name ?? p.providerId}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#9E8E7C]">
                     {p.paidMonths}/{p.tenorMonths} kỳ · Bắt đầu {p.firstBillingPeriod}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-slate-900">{currencyVnd(p.monthlyPrincipal)}</p>
+                  <p className="font-semibold text-[#2C2215]">{currencyVnd(p.monthlyPrincipal)}</p>
                   <span className={p.status === 'completed' ? 'badge-green' : 'badge-amber'}>
                     {p.status === 'completed' ? 'Hoàn tất' : 'Đang trả'}
                   </span>

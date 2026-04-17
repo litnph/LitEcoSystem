@@ -10,7 +10,7 @@ type StatementTableProps = {
 export function StatementTable({ rows, selectedIds, onToggle }: StatementTableProps) {
   if (rows.length === 0) {
     return (
-      <div className="flex items-center justify-center py-8 text-sm text-slate-400">
+      <div className="flex items-center justify-center py-8 text-sm text-[#9E8E7C]">
         Không có giao dịch
       </div>
     )
@@ -43,8 +43,8 @@ export function StatementTable({ rows, selectedIds, onToggle }: StatementTablePr
                   <span
                     className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition ${
                       selected
-                        ? 'border-blue-600 bg-blue-600'
-                        : 'border-slate-300 bg-white'
+                        ? 'border-[#7A5E3E] bg-[#7A5E3E]'
+                        : 'border-[#D4C9BE] bg-white'
                     }`}
                     onClick={(e) => { e.stopPropagation(); onToggle(item.id) }}
                   >
@@ -55,14 +55,14 @@ export function StatementTable({ rows, selectedIds, onToggle }: StatementTablePr
                     )}
                   </span>
                 </td>
-                <td className="data-td text-xs text-slate-500">
+                <td className="data-td text-xs text-[#9E8E7C]">
                   {formatISODateToVi(item.occurredAt)}
                 </td>
-                <td className="data-td font-medium text-slate-900">{item.merchant}</td>
+                <td className="data-td font-medium text-[#2C2215]">{item.merchant}</td>
                 <td className="data-td">
                   <span className="badge-slate">{item.category}</span>
                 </td>
-                <td className="data-td text-right font-semibold text-slate-900">
+                <td className="data-td text-right font-semibold text-[#2C2215]">
                   {currencyVnd(item.amount)}
                 </td>
               </tr>

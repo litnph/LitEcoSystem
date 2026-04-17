@@ -46,20 +46,20 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
       {/* ── Metric row ── */}
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Net Worth */}
-        <div className="card-metric col-span-full sm:col-span-1 bg-gradient-to-br from-blue-600 to-blue-800 p-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-blue-200">
+        <div className="card-metric col-span-full sm:col-span-1 bg-gradient-to-br from-[#8B6F4E] to-[#4E3420] p-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#D9CCB8]">
             Tài sản ròng
           </p>
           <p className="mt-3 text-3xl font-bold leading-none tracking-tight">
             {currencyVnd(d.netWorth)}
           </p>
-          <p className="mt-2 text-xs text-blue-300">Cập nhật tự động theo giao dịch</p>
+          <p className="mt-2 text-xs text-[#C4B5A5]">Cập nhật tự động theo giao dịch</p>
         </div>
 
         {/* Income */}
         <div className="card flex flex-col justify-between p-5">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
               Thu nhập
             </p>
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50">
@@ -67,15 +67,15 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
             </span>
           </div>
           <div>
-            <p className="mt-4 text-xl font-bold text-slate-900">{currencyVnd(totalIncome)}</p>
-            <p className="mt-1 text-xs text-slate-400">Tổng thu gần nhất</p>
+            <p className="mt-4 text-xl font-bold text-[#2C2215]">{currencyVnd(totalIncome)}</p>
+            <p className="mt-1 text-xs text-[#9E8E7C]">Tổng thu gần nhất</p>
           </div>
         </div>
 
         {/* Expense */}
         <div className="card flex flex-col justify-between p-5">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
               Chi tiêu
             </p>
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-50">
@@ -83,8 +83,8 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
             </span>
           </div>
           <div>
-            <p className="mt-4 text-xl font-bold text-slate-900">{currencyVnd(totalExpense)}</p>
-            <p className="mt-1 text-xs text-slate-400">Tổng chi gần nhất</p>
+            <p className="mt-4 text-xl font-bold text-[#2C2215]">{currencyVnd(totalExpense)}</p>
+            <p className="mt-1 text-xs text-[#9E8E7C]">Tổng chi gần nhất</p>
           </div>
         </div>
       </div>
@@ -137,11 +137,11 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
       <div className="grid gap-5 lg:grid-cols-2">
         {/* Donut chart */}
         <div className="card p-6">
-          <h2 className="text-sm font-semibold text-slate-900">Chi tiêu theo danh mục</h2>
+          <h2 className="text-sm font-semibold text-[#2C2215]">Chi tiêu theo danh mục</h2>
           {d.spendingByCategory.length === 0 ? (
             <div className="mt-6 flex flex-col items-center justify-center text-center">
               <p className="text-3xl">📊</p>
-              <p className="mt-2 text-sm text-slate-400">Chưa có dữ liệu chi tiêu</p>
+              <p className="mt-2 text-sm text-[#9E8E7C]">Chưa có dữ liệu chi tiêu</p>
             </div>
           ) : (
             <div className="mt-5 flex items-center gap-8">
@@ -150,7 +150,7 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
                 style={{ background: `conic-gradient(${chartGradient})` }}
               >
                 <div className="absolute inset-[18px] rounded-full bg-white flex items-center justify-center">
-                  <span className="text-xs font-semibold text-slate-500">
+                  <span className="text-xs font-semibold text-[#9E8E7C]">
                     {d.spendingByCategory.length} nhóm
                   </span>
                 </div>
@@ -162,9 +162,9 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
                       className="h-2.5 w-2.5 shrink-0 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="min-w-[64px] text-sm text-slate-600">{item.label}</span>
-                    <span className="font-semibold text-slate-900">{item.value}%</span>
-                    <span className="text-xs text-slate-400">
+                    <span className="min-w-[64px] text-sm text-[#6B5B48]">{item.label}</span>
+                    <span className="font-semibold text-[#2C2215]">{item.value}%</span>
+                    <span className="text-xs text-[#9E8E7C]">
                       {currencyVnd(item.amount)}
                     </span>
                   </li>
@@ -176,12 +176,12 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
 
         {/* Recent transactions */}
         <div className="card p-6">
-          <h2 className="text-sm font-semibold text-slate-900">Giao dịch gần đây</h2>
+          <h2 className="text-sm font-semibold text-[#2C2215]">Giao dịch gần đây</h2>
           <ul className="mt-4 space-y-1">
             {d.recentTransactions.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-slate-50"
+                className="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-[#F9F6F2]"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -194,8 +194,8 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
                     {item.type === 'income' ? '↓' : '↑'}
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">{item.merchant}</p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-sm font-medium text-[#2C2215]">{item.merchant}</p>
+                    <p className="text-xs text-[#9E8E7C]">
                       {item.category} · {formatISODateToVi(item.occurredAt)}
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
       {/* ── Open debts ── */}
       {d.urgentDebts.length > 0 && (
         <div className="card p-6">
-          <h2 className="text-sm font-semibold text-slate-900">Công nợ đang mở</h2>
+          <h2 className="text-sm font-semibold text-[#2C2215]">Công nợ đang mở</h2>
           <ul className="mt-4 space-y-3">
             {d.urgentDebts.map((x) => {
               const remaining = x.principal - x.paidAmount
@@ -224,19 +224,19 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
               return (
                 <li key={x.id}>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-800">{x.title}</span>
+                    <span className="font-medium text-[#3E3025]">{x.title}</span>
                     <span className="font-semibold text-red-600">
                       Còn {currencyVnd(remaining)}
                     </span>
                   </div>
                   <div className="mt-1.5 flex items-center gap-3">
-                    <div className="flex-1 overflow-hidden rounded-full bg-slate-100 h-1.5">
+                    <div className="flex-1 overflow-hidden rounded-full bg-[#EDE6DC] h-1.5">
                       <div
-                        className="h-full rounded-full bg-blue-500 transition-all"
+                        className="h-full rounded-full bg-[#8B6F4E] transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className="shrink-0 text-xs text-slate-400">{pct}% đã trả</span>
+                    <span className="shrink-0 text-xs text-[#9E8E7C]">{pct}% đã trả</span>
                   </div>
                 </li>
               )
@@ -253,8 +253,8 @@ export function DashboardView({ onGoCycle, onGoPayments }: DashboardViewProps) {
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50">
               <IconCheck className="h-5 w-5 text-emerald-600" />
             </span>
-            <p className="font-semibold text-slate-700">Mọi thứ ổn!</p>
-            <p className="text-sm text-slate-400">Không có cảnh báo hay công nợ nào.</p>
+            <p className="font-semibold text-[#3E3025]">Mọi thứ ổn!</p>
+            <p className="text-sm text-[#9E8E7C]">Không có cảnh báo hay công nợ nào.</p>
           </div>
         )}
     </section>

@@ -19,7 +19,7 @@ function UpsertModal({
   return (
     <div className="modal-backdrop" onClick={onCancel}>
       <div className="modal-panel max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+        <h3 className="text-base font-semibold text-[#2C2215]">{title}</h3>
         <div className="mt-4 space-y-3">{children}</div>
         <div className="mt-6 flex gap-3">
           <button type="button" onClick={onCancel} className="btn-ghost flex-1">Hủy</button>
@@ -34,7 +34,7 @@ function UpsertModal({
 function BtnEdit({ onClick }: { onClick: () => void }) {
   return (
     <button type="button" title="Sửa" onClick={onClick}
-      className="rounded-md p-1 text-slate-400 transition hover:bg-blue-50 hover:text-blue-600">
+      className="rounded-md p-1 text-[#BFB0A0] transition hover:bg-[#EFE3D2] hover:text-[#7A5E3E]">
       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
       </svg>
@@ -44,7 +44,7 @@ function BtnEdit({ onClick }: { onClick: () => void }) {
 function BtnDelete({ onClick }: { onClick: () => void }) {
   return (
     <button type="button" title="Xóa" onClick={onClick}
-      className="rounded-md p-1 text-slate-400 transition hover:bg-red-50 hover:text-red-600">
+      className="rounded-md p-1 text-[#BFB0A0] transition hover:bg-red-50 hover:text-red-600">
       <IconX className="h-3.5 w-3.5" />
     </button>
   )
@@ -122,7 +122,7 @@ function CategoryPanel() {
     <div className="space-y-4">
       {/* toolbar */}
       <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#9E8E7C]">
           {totalCount > 0 ? `${totalCount} phân loại · Thu ${groupedByKind.income.length} · Chi ${groupedByKind.expense.length}` : 'Chưa có phân loại nào'}
         </p>
         <button type="button" className="btn-primary btn-sm"
@@ -132,9 +132,9 @@ function CategoryPanel() {
       </div>
 
       {totalCount === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 py-14">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#E4D9CE] py-14">
           <span className="text-3xl">🗂️</span>
-          <p className="text-sm font-medium text-slate-500">Chưa có phân loại nào</p>
+          <p className="text-sm font-medium text-[#9E8E7C]">Chưa có phân loại nào</p>
           <button type="button" className="btn-ghost btn-sm"
             onClick={() => { setParent(''); setChild(''); setNewParent(''); setOpenAdd(true) }}>
             <IconPlus className="h-3.5 w-3.5" /> Tạo phân loại đầu tiên
@@ -276,8 +276,8 @@ function SourcePanel() {
   }
 
   const bnplFields = (
-    <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 space-y-3">
-      <p className="text-xs font-semibold text-blue-700">Cấu hình trả sau</p>
+    <div className="rounded-xl border border-[#E4D9CE] bg-[#F5F0E8] p-3 space-y-3">
+      <p className="text-xs font-semibold text-[#7A5E3E]">Cấu hình trả sau</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="form-field">
           <label className="form-label">Ngày sao kê</label>
@@ -301,9 +301,9 @@ function SourcePanel() {
             placeholder="Bỏ trống = không giới hạn"
             className="form-input pr-12"
           />
-          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">VND</span>
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9E8E7C]">VND</span>
         </div>
-        <p className="mt-1 text-[11px] text-slate-400">Giao dịch có giá trị vượt hạn mức này sẽ không được phép chuyển sang trả góp.</p>
+        <p className="mt-1 text-[11px] text-[#9E8E7C]">Giao dịch có giá trị vượt hạn mức này sẽ không được phép chuyển sang trả góp.</p>
       </div>
     </div>
   )
@@ -315,7 +315,7 @@ function SourcePanel() {
     <div className="space-y-5">
       {/* toolbar */}
       <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#9E8E7C]">
           {state.paymentSources.length > 0
             ? `${state.paymentSources.length} nguồn · ${directSources.length} trực tiếp · ${bnplSources.length} trả sau`
             : 'Chưa có nguồn tiền nào'}
@@ -326,9 +326,9 @@ function SourcePanel() {
       </div>
 
       {state.paymentSources.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 py-14">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#E4D9CE] py-14">
           <span className="text-3xl">💳</span>
-          <p className="text-sm font-medium text-slate-500">Chưa có nguồn tiền nào</p>
+          <p className="text-sm font-medium text-[#9E8E7C]">Chưa có nguồn tiền nào</p>
           <button type="button" className="btn-ghost btn-sm" onClick={() => { resetForm(); setOpenAdd(true) }}>
             <IconPlus className="h-3.5 w-3.5" /> Thêm nguồn tiền đầu tiên
           </button>
@@ -338,15 +338,15 @@ function SourcePanel() {
           {/* Direct */}
           {directSources.length > 0 && (
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">Trực tiếp</p>
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#9E8E7C]">Trực tiếp</p>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {directSources.map((src) => (
                   <div key={src}
-                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:shadow">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-bold text-slate-500">
+                    className="flex items-center gap-3 rounded-xl border border-[#E4D9CE] bg-white px-4 py-3 shadow-sm transition hover:shadow">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F3EEE7] text-sm font-bold text-[#9E8E7C]">
                       {src[0]?.toUpperCase()}
                     </div>
-                    <span className="flex-1 truncate text-sm font-semibold text-slate-800">{src}</span>
+                    <span className="flex-1 truncate text-sm font-semibold text-[#3E3025]">{src}</span>
                     <div className="flex shrink-0 items-center gap-0.5">
                       <BtnEdit onClick={() => {
                         setEditOldName(src); setName(src)
@@ -363,7 +363,7 @@ function SourcePanel() {
           {/* BNPL */}
           {bnplSources.length > 0 && (
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">Trả sau (BNPL)</p>
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#9E8E7C]">Trả sau (BNPL)</p>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {bnplSources.map((src) => {
                   const sd = state.paymentSourceStatementDays[src]
@@ -371,13 +371,13 @@ function SourcePanel() {
                   const lim = (state.paymentSourceInstallmentLimits ?? {})[src] ?? null
                   return (
                     <div key={src}
-                      className="rounded-xl border border-blue-200 bg-white px-4 py-3 shadow-sm transition hover:shadow">
+                      className="rounded-xl border border-[#E4D9CE] bg-white px-4 py-3 shadow-sm transition hover:shadow">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-sm font-bold text-blue-600">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EFE3D2] text-sm font-bold text-[#7A5E3E]">
                           {src[0]?.toUpperCase()}
                         </div>
-                        <span className="flex-1 truncate text-sm font-semibold text-slate-800">{src}</span>
-                        <span className="shrink-0 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">BNPL</span>
+                        <span className="flex-1 truncate text-sm font-semibold text-[#3E3025]">{src}</span>
+                        <span className="shrink-0 rounded-full bg-[#EDE6DC] px-2 py-0.5 text-[10px] font-bold text-[#7A5E3E]">BNPL</span>
                         <div className="flex shrink-0 items-center gap-0.5">
                           <BtnEdit onClick={() => {
                             setEditOldName(src); setName(src); setMode('bnpl')
@@ -388,14 +388,14 @@ function SourcePanel() {
                           <BtnDelete onClick={() => setPendingDelete(src)} />
                         </div>
                       </div>
-                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 border-t border-blue-100 pt-2">
-                        <span className="text-[11px] text-slate-500">Sao kê ngày <strong className="text-slate-700">{sd ?? '—'}</strong></span>
-                        <span className="text-slate-300">·</span>
-                        <span className="text-[11px] text-slate-500">Hạn ngày <strong className="text-slate-700">{dd ?? '—'}</strong></span>
-                        <span className="text-slate-300">·</span>
-                        <span className="text-[11px] text-slate-500">
+                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 border-t border-[#EDE6DC] pt-2">
+                        <span className="text-[11px] text-[#9E8E7C]">Sao kê ngày <strong className="text-[#3E3025]">{sd ?? '—'}</strong></span>
+                        <span className="text-[#C4B5A5]">·</span>
+                        <span className="text-[11px] text-[#9E8E7C]">Hạn ngày <strong className="text-[#3E3025]">{dd ?? '—'}</strong></span>
+                        <span className="text-[#C4B5A5]">·</span>
+                        <span className="text-[11px] text-[#9E8E7C]">
                           Hạn mức trả góp{' '}
-                          <strong className="text-slate-700">
+                          <strong className="text-[#3E3025]">
                             {lim != null ? lim.toLocaleString('vi-VN') + ' đ' : 'Không giới hạn'}
                           </strong>
                         </span>
@@ -417,10 +417,10 @@ function SourcePanel() {
         </div>
         <div className="form-field">
           <label className="form-label">Loại nguồn</label>
-          <div className="flex overflow-hidden rounded-xl border border-slate-200">
+          <div className="flex overflow-hidden rounded-xl border border-[#E4D9CE]">
             {(['direct', 'bnpl'] as const).map((t) => (
               <button key={t} type="button" onClick={() => setMode(t)}
-                className={`flex-1 py-2 text-sm font-semibold transition ${mode === t ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>
+                className={`flex-1 py-2 text-sm font-semibold transition ${mode === t ? 'bg-[#7A5E3E] text-white' : 'text-[#9E8E7C] hover:bg-[#F9F6F2]'}`}>
                 {t === 'direct' ? 'Trực tiếp' : 'Trả sau (BNPL)'}
               </button>
             ))}
@@ -436,10 +436,10 @@ function SourcePanel() {
         </div>
         <div className="form-field">
           <label className="form-label">Loại nguồn</label>
-          <div className="flex overflow-hidden rounded-xl border border-slate-200">
+          <div className="flex overflow-hidden rounded-xl border border-[#E4D9CE]">
             {(['direct', 'bnpl'] as const).map((t) => (
               <button key={t} type="button" onClick={() => setMode(t)}
-                className={`flex-1 py-2 text-sm font-semibold transition ${mode === t ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>
+                className={`flex-1 py-2 text-sm font-semibold transition ${mode === t ? 'bg-[#7A5E3E] text-white' : 'text-[#9E8E7C] hover:bg-[#F9F6F2]'}`}>
                 {t === 'direct' ? 'Trực tiếp' : 'Trả sau (BNPL)'}
               </button>
             ))}
@@ -500,7 +500,7 @@ function ChannelTagPanel() {
     <div className="space-y-4">
       {/* toolbar */}
       <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#9E8E7C]">
           {state.paymentChannels.length > 0 ? `${state.paymentChannels.length} kênh thanh toán` : 'Chưa có kênh nào'}
         </p>
         <button type="button" className="btn-primary btn-sm" onClick={() => { setValue(''); setOpenAdd(true) }}>
@@ -509,9 +509,9 @@ function ChannelTagPanel() {
       </div>
 
       {state.paymentChannels.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 py-14">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#E4D9CE] py-14">
           <span className="text-3xl">🏷️</span>
-          <p className="text-sm font-medium text-slate-500">Chưa có kênh thanh toán nào</p>
+          <p className="text-sm font-medium text-[#9E8E7C]">Chưa có kênh thanh toán nào</p>
           <button type="button" className="btn-ghost btn-sm" onClick={() => { setValue(''); setOpenAdd(true) }}>
             <IconPlus className="h-3.5 w-3.5" /> Thêm kênh đầu tiên
           </button>
@@ -606,9 +606,9 @@ function InstallmentRulesPanel() {
   return (
     <div className="card p-5 space-y-4">
       <div>
-        <h3 className="text-sm font-semibold text-slate-900">Quy tắc chuyển trả góp</h3>
-        <p className="text-[11px] text-slate-400 mt-0.5">
-          Chỉ hiển thị nút <span className="font-medium text-blue-600">Trả góp</span> cho giao dịch BNPL đạt hạn mức tối thiểu.
+        <h3 className="text-sm font-semibold text-[#2C2215]">Quy tắc chuyển trả góp</h3>
+        <p className="text-[11px] text-[#9E8E7C] mt-0.5">
+          Chỉ hiển thị nút <span className="font-medium text-[#7A5E3E]">Trả góp</span> cho giao dịch BNPL đạt hạn mức tối thiểu.
         </p>
       </div>
 
@@ -637,15 +637,15 @@ function InstallmentRulesPanel() {
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-[12px] text-slate-600">
+      <div className="rounded-xl border border-[#EDE6DC] bg-[#F5F0E8] px-4 py-3 text-[12px] text-[#6B5B48]">
         {state.installmentMinAmount > 0 ? (
           <span>
             Hiện tại: chỉ giao dịch{' '}
-            <span className="font-semibold text-blue-700">≥ {currencyVnd(state.installmentMinAmount)}</span>{' '}
+            <span className="font-semibold text-[#7A5E3E]">≥ {currencyVnd(state.installmentMinAmount)}</span>{' '}
             mới hiển thị nút Trả góp.
           </span>
         ) : (
-          <span className="text-slate-400">Chưa đặt hạn mức — tất cả giao dịch BNPL đều hiển thị nút Trả góp.</span>
+          <span className="text-[#9E8E7C]">Chưa đặt hạn mức — tất cả giao dịch BNPL đều hiển thị nút Trả góp.</span>
         )}
       </div>
     </div>
@@ -710,11 +710,11 @@ export function MasterDataView() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Cấu hình danh mục</h2>
-          <p className="text-xs text-slate-400">Quản lý nguồn tiền, phân loại chi tiêu và kênh thanh toán</p>
+          <h2 className="text-base font-semibold text-[#2C2215]">Cấu hình danh mục</h2>
+          <p className="text-xs text-[#9E8E7C]">Quản lý nguồn tiền, phân loại chi tiêu và kênh thanh toán</p>
         </div>
         {syncStatus !== 'idle' && (
-          <span className={`text-xs font-medium ${syncStatus === 'saved' ? 'text-emerald-600' : 'text-slate-400'}`}>
+          <span className={`text-xs font-medium ${syncStatus === 'saved' ? 'text-emerald-600' : 'text-[#9E8E7C]'}`}>
             {syncStatus === 'saving' ? '⏳ Đang lưu...' : '✓ Đã đồng bộ'}
           </span>
         )}
@@ -731,22 +731,22 @@ export function MasterDataView() {
               onClick={() => setActiveTab(tab.id)}
               className={`group flex shrink-0 flex-col gap-0.5 rounded-2xl border px-4 py-3 text-left transition sm:min-w-[160px] ${
                 active
-                  ? 'border-blue-200 bg-blue-50 shadow-sm'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                  ? 'border-[#D4C9BE] bg-[#EFE3D2] shadow-sm'
+                  : 'border-[#E4D9CE] bg-white hover:border-[#D4C9BE] hover:bg-[#F9F6F2]'
               }`}
             >
               <span className="flex items-center gap-2">
                 <span className="text-base">{tab.icon}</span>
-                <span className={`text-sm font-semibold ${active ? 'text-blue-800' : 'text-slate-700'}`}>
+                <span className={`text-sm font-semibold ${active ? 'text-[#5C3A1E]' : 'text-[#3E3025]'}`}>
                   {tab.label}
                 </span>
                 <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                  active ? 'bg-blue-200 text-blue-700' : 'bg-slate-100 text-slate-500'
+                  active ? 'bg-[#D9C8B4] text-[#7A5E3E]' : 'bg-[#F3EEE7] text-[#9E8E7C]'
                 }`}>
                   {counts[tab.id]}
                 </span>
               </span>
-              <span className={`text-[11px] ${active ? 'text-blue-600' : 'text-slate-400'}`}>
+              <span className={`text-[11px] ${active ? 'text-[#8B6F4E]' : 'text-[#9E8E7C]'}`}>
                 {tab.description}
               </span>
             </button>

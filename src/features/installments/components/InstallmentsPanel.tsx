@@ -23,8 +23,8 @@ export function InstallmentsPanel({
 
   return (
     <div className="card p-5">
-      <h3 className="text-sm font-semibold text-slate-900">Chuyển đổi trả góp</h3>
-      <p className="mt-1 text-xs text-slate-400">
+      <h3 className="text-sm font-semibold text-[#2C2215]">Chuyển đổi trả góp</h3>
+      <p className="mt-1 text-xs text-[#9E8E7C]">
         Sao kê kỳ tiếp theo sẽ gồm phí chuyển đổi + kỳ trả đầu tiên.
       </p>
 
@@ -80,22 +80,22 @@ export function InstallmentsPanel({
       </button>
 
       {plans.length > 0 && (
-        <div className="mt-5 space-y-2 border-t border-slate-100 pt-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <div className="mt-5 space-y-2 border-t border-[#EDE6DC] pt-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#9E8E7C]">
             Kế hoạch đang chạy
           </p>
           {plans.map((p) => (
             <div
               key={p.id}
-              className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3"
+              className="flex items-center justify-between rounded-xl bg-[#F5F0E8] px-4 py-3"
             >
               <div>
-                <p className="text-xs font-medium text-slate-700">
+                <p className="text-xs font-medium text-[#3E3025]">
                   Kỳ đầu: <span className="font-semibold">{p.firstBillingPeriod}</span>
                   {' '}· {p.tenorMonths} tháng
                   {' '}· {p.paidMonths}/{p.tenorMonths} kỳ đã trả
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-[#9E8E7C]">
                   Kỳ 1: phí {currencyVnd(p.conversionFee)} + {currencyVnd(p.monthlyPrincipal)}/tháng
                 </p>
               </div>

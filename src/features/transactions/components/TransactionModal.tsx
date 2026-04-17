@@ -77,19 +77,19 @@ export function TransactionModal({ editingTx, onClose }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="flex items-center justify-between border-b border-[#EDE6DC] pb-4">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-[#2C2215]">
               {f.isEditing ? 'Sửa giao dịch' : 'Thêm giao dịch mới'}
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-[#9E8E7C] mt-0.5">
               {f.isEditing ? 'Chỉnh sửa thông tin giao dịch' : 'Nhập thông tin giao dịch mới'}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[#9E8E7C] transition hover:bg-[#EDE6DC]"
           >
             <IconX />
           </button>
@@ -98,7 +98,7 @@ export function TransactionModal({ editingTx, onClose }: Props) {
         <div className="mt-4 space-y-4">
           {/* Type toggle */}
           <Field label="Loại giao dịch">
-            <div className="flex overflow-hidden rounded-xl border border-slate-200">
+            <div className="flex overflow-hidden rounded-xl border border-[#E4D9CE]">
               {(['expense', 'income'] as const).map((t) => (
                 <button
                   key={t}
@@ -109,7 +109,7 @@ export function TransactionModal({ editingTx, onClose }: Props) {
                       ? t === 'expense'
                         ? 'bg-red-600 text-white'
                         : 'bg-emerald-600 text-white'
-                      : 'text-slate-500 hover:bg-slate-50'
+                      : 'text-[#9E8E7C] hover:bg-[#F9F6F2]'
                   }`}
                 >
                   {t === 'expense' ? '↑ Chi tiêu' : '↓ Thu nhập'}
@@ -123,12 +123,12 @@ export function TransactionModal({ editingTx, onClose }: Props) {
               <button
                 type="button"
                 onClick={() => f.update('isAdvancePayment', !f.form.isAdvancePayment)}
-                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:bg-slate-100"
+                className="flex w-full items-center justify-between rounded-xl border border-[#E4D9CE] bg-[#F5F0E8] px-3 py-2.5 text-left transition hover:bg-[#EDE6DC]"
               >
-                <span className="text-sm font-medium text-slate-700">Bật chi hộ</span>
+                <span className="text-sm font-medium text-[#3E3025]">Bật chi hộ</span>
                 <span
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                    f.form.isAdvancePayment ? 'bg-amber-500' : 'bg-slate-300'
+                    f.form.isAdvancePayment ? 'bg-amber-500' : 'bg-[#D4C9BE]'
                   }`}
                 >
                   <span
@@ -229,15 +229,15 @@ export function TransactionModal({ editingTx, onClose }: Props) {
                     if (!categoryPickerOpen) setCategorySearch('')
                   }}
                 >
-                  <span className={currentParent && currentChild ? 'text-slate-700' : 'text-slate-400'}>
+                  <span className={currentParent && currentChild ? 'text-[#3E3025]' : 'text-[#BFB0A0]'}>
                     {currentParent && currentChild
                       ? currentChild
                       : 'Chọn phân loại'}
                   </span>
-                  <span className="text-xs text-slate-400">{categoryPickerOpen ? '▲' : '▼'}</span>
+                  <span className="text-xs text-[#9E8E7C]">{categoryPickerOpen ? '▲' : '▼'}</span>
                 </button>
                 {categoryPickerOpen && (
-                  <div className="absolute z-50 mt-1 w-full max-w-full rounded-xl border border-slate-200 bg-white p-2 shadow-xl">
+                  <div className="absolute z-50 mt-1 w-full max-w-full rounded-xl border border-[#E4D9CE] bg-white p-2 shadow-xl">
                     <input
                       value={categorySearch}
                       onChange={(e) => setCategorySearch(e.target.value)}
@@ -245,13 +245,13 @@ export function TransactionModal({ editingTx, onClose }: Props) {
                       className="form-input mb-2"
                       autoFocus
                     />
-                    <div className="max-h-64 overflow-y-auto rounded-lg border border-slate-100 bg-slate-50/40 p-2">
+                    <div className="max-h-64 overflow-y-auto rounded-lg border border-[#EDE6DC] bg-[#F9F6F2]/80 p-2">
                       {filteredCategoryGroups.length === 0 ? (
-                        <p className="px-2 py-1 text-xs text-slate-400">Không tìm thấy phân loại phù hợp.</p>
+                        <p className="px-2 py-1 text-xs text-[#9E8E7C]">Không tìm thấy phân loại phù hợp.</p>
                       ) : (
                         filteredCategoryGroups.map(({ parent, children }) => (
                           <div key={parent} className="mb-2 last:mb-0">
-                            <p className="rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-700">
+                            <p className="rounded-md border border-[#E4D9CE] bg-[#F3EEE7] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#3E3025]">
                               {parent}
                             </p>
                             <div className="mt-1 space-y-1">
@@ -264,8 +264,8 @@ export function TransactionModal({ editingTx, onClose }: Props) {
                                     type="button"
                                     className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition ${
                                       selected
-                                        ? 'bg-blue-50 font-semibold text-blue-700'
-                                        : 'bg-white text-slate-700 hover:bg-slate-50'
+                                        ? 'bg-[#EFE3D2] font-semibold text-[#7A5E3E]'
+                                        : 'bg-white text-[#3E3025] hover:bg-[#F9F6F2]'
                                     }`}
                                     onClick={() => {
                                       f.update('category', value)
@@ -283,10 +283,10 @@ export function TransactionModal({ editingTx, onClose }: Props) {
                     </div>
                   </div>
                 )}
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#9E8E7C]">
                   Đã chọn:{' '}
                   {currentParent && currentChild ? (
-                    <span className="font-medium text-slate-700">
+                    <span className="font-medium text-[#3E3025]">
                       {currentParent} / {currentChild}
                     </span>
                   ) : (
@@ -331,8 +331,8 @@ export function TransactionModal({ editingTx, onClose }: Props) {
             <Field label="Hình thức">
               <div className={`rounded-xl border px-3 py-2 text-sm font-medium ${
                 f.sourceMode === 'bnpl'
-                  ? 'border-blue-100 bg-blue-50 text-blue-700'
-                  : 'border-slate-200 bg-slate-50 text-slate-600'
+                  ? 'border-[#E4D9CE] bg-[#EFE3D2] text-[#7A5E3E]'
+                  : 'border-[#E4D9CE] bg-[#F5F0E8] text-[#6B5B48]'
               }`}>
                 {f.sourceMode === 'bnpl' ? 'Mua trước trả sau (BNPL)' : 'Trả liền'}
               </div>
@@ -354,7 +354,7 @@ export function TransactionModal({ editingTx, onClose }: Props) {
           )}
         </div>
 
-        <div className="mt-5 flex gap-3 border-t border-slate-100 pt-4">
+        <div className="mt-5 flex gap-3 border-t border-[#EDE6DC] pt-4">
           <button type="button" onClick={onClose} className="btn-ghost flex-1">
             Hủy
           </button>

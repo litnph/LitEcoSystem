@@ -25,25 +25,25 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Left panel — branding */}
-      <div className="hidden flex-col justify-between p-12 lg:flex lg:w-1/2">
+      <div className="hidden flex-col justify-between border-r border-slate-200 bg-white p-12 lg:flex lg:w-1/2">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 shadow-lg shadow-blue-500/30">
-            <span className="text-lg font-bold text-white">₫</span>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900">
+            <span className="text-lg font-bold text-white">L</span>
           </div>
-          <span className="text-xl font-bold text-white">FinTrack</span>
+          <span className="text-xl font-bold text-slate-900">LitEcoSystem</span>
         </div>
 
         {/* Tagline */}
         <div>
-          <h1 className="text-4xl font-bold leading-tight text-white">
+          <h1 className="text-4xl font-bold leading-tight text-slate-900">
             Quản lý tài chính
             <br />
-            <span className="text-blue-400">cá nhân thông minh</span>
+            <span className="text-slate-500">cá nhân tối giản</span>
           </h1>
-          <p className="mt-4 max-w-sm text-base leading-relaxed text-slate-400">
+          <p className="mt-4 max-w-sm text-base leading-relaxed text-slate-500">
             Theo dõi thu chi, quản lý trả góp, nợ vay và kỳ sao kê thẻ tín dụng
             — tất cả trong một nơi.
           </p>
@@ -56,8 +56,8 @@ export function LoginPage() {
               'Ghi nhận trả góp & nợ vay',
               'Chi hộ & thu hồi công nợ',
             ].map((feat) => (
-              <li key={feat} className="flex items-center gap-3 text-sm text-slate-300">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-blue-400">
+              <li key={feat} className="flex items-center gap-3 text-sm text-slate-600">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700">
                   ✓
                 </span>
                 {feat}
@@ -66,30 +66,30 @@ export function LoginPage() {
           </ul>
         </div>
 
-        <p className="text-xs text-slate-600">© 2026 FinTrack · Dữ liệu lưu cục bộ trên trình duyệt</p>
+        <p className="text-xs text-slate-400">© 2026 LitEcoSystem · Dữ liệu lưu cục bộ trên trình duyệt</p>
       </div>
 
       {/* Right panel — login form */}
-      <div className="flex flex-1 items-center justify-center p-6">
+      <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500">
-              <span className="text-base font-bold text-white">₫</span>
+          <div className="mb-6 flex items-center gap-3 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900">
+              <span className="text-base font-bold text-white">L</span>
             </div>
-            <span className="text-lg font-bold text-white">FinTrack</span>
+            <span className="text-lg font-bold text-slate-900">LitEcoSystem</span>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white">Đăng nhập</h2>
-              <p className="mt-1 text-sm text-slate-400">Chào mừng trở lại! Nhập thông tin để tiếp tục.</p>
+          <div className="card p-5 sm:p-8">
+            <div className="mb-5">
+              <h2 className="text-2xl font-bold text-slate-900">Đăng nhập</h2>
+              <p className="mt-1 text-sm text-slate-500">Chào mừng trở lại! Nhập thông tin để tiếp tục.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username */}
               <div className="form-field">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <label className="form-label">
                   Tên đăng nhập
                 </label>
                 <input
@@ -99,13 +99,13 @@ export function LoginPage() {
                   placeholder="admin hoặc demo"
                   autoComplete="username"
                   autoFocus
-                  className="w-full rounded-xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="form-input"
                 />
               </div>
 
               {/* Password */}
               <div className="form-field">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <label className="form-label">
                   Mật khẩu
                 </label>
                 <div className="relative">
@@ -115,12 +115,12 @@ export function LoginPage() {
                     onChange={(e) => { setPassword(e.target.value); setError(null) }}
                     placeholder="••••••••"
                     autoComplete="current-password"
-                    className="w-full rounded-xl border border-white/10 bg-white/8 px-4 py-3 pr-12 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                    className="form-input pr-12"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-200"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700"
                     tabIndex={-1}
                   >
                     {showPassword ? (
@@ -139,7 +139,7 @@ export function LoginPage() {
 
               {/* Error */}
               {error && (
-                <div className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                   </svg>
@@ -151,7 +151,7 @@ export function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-primary mt-2 w-full py-3"
               >
                 {loading ? (
                   <>
@@ -169,7 +169,7 @@ export function LoginPage() {
 
           </div>
 
-          <p className="mt-6 text-center text-xs text-slate-600">
+          <p className="mt-4 text-center text-xs text-slate-500">
             Dữ liệu được lưu cục bộ trên trình duyệt của bạn.
           </p>
         </div>

@@ -1,6 +1,6 @@
 import { clearSession, loadSession, saveSession } from '../../app/auth/authStorage'
 
-const RAW_API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'https://fe6a-118-69-67-45.ngrok-free.app/api'
+const RAW_API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'https://litecosysapi.onrender.com/api'
 const API_BASE = RAW_API_BASE.replace(/\/+$/, '')
 const API_V1_BASE = `${API_BASE}/v1`
 

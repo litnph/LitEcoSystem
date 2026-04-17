@@ -7,28 +7,35 @@
 
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    color-scheme: light;
+  }
   body {
     margin: 0;
     font-family: var(--font-sans);
-    background-color: #f1f5f9;
+    background-color: #f8fafc;
     color: #0f172a;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  #root {
+    min-height: 100vh;
+  }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
 }
 
 @layer components {
 
   /* ========= CARD ========= */
   .card {
-    @apply rounded-2xl border border-slate-100 bg-white shadow-sm;
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)];
   }
   /* alias kept for backward compat */
   .glass-card {
-    @apply rounded-2xl border border-slate-100 bg-white shadow-sm;
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)];
   }
   .card-metric {
     @apply rounded-2xl p-6 text-white;
@@ -42,11 +49,11 @@
     @apply text-xs font-semibold uppercase tracking-wider text-slate-400;
   }
   .form-input {
-    @apply w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition
            focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-500/20;
   }
   .form-select {
-    @apply w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition
            focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-500/20
            appearance-none cursor-pointer;
   }
@@ -59,7 +66,7 @@
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition select-none
            active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50
-           bg-blue-600 text-white hover:bg-blue-700 shadow-sm;
+           bg-slate-900 text-white hover:bg-slate-800 shadow-sm;
   }
   .btn-success {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition select-none
@@ -91,18 +98,18 @@
   /* ========= TABLE ========= */
   .data-table   { @apply w-full border-collapse text-left text-sm; }
   .data-th      { @apply px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-400 bg-slate-50 border-b border-slate-100; }
-  .data-td      { @apply px-4 py-3.5 text-slate-700 border-b border-slate-50; }
-  .data-tr      { @apply transition hover:bg-blue-50/40 cursor-default; }
-  .data-tr-selected { @apply bg-blue-50/60; }
+  .data-td      { @apply px-4 py-3.5 text-slate-700 border-b border-slate-100; }
+  .data-tr      { @apply transition hover:bg-slate-50/80 cursor-default; }
+  .data-tr-selected { @apply bg-slate-100; }
 
   /* ========= MODAL ========= */
   .modal-backdrop {
-    @apply fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm;
+    @apply fixed inset-0 z-40 flex items-center justify-center bg-slate-900/45 p-4 backdrop-blur-sm;
   }
   .modal-panel {
-    @apply rounded-2xl border border-slate-100 bg-white shadow-2xl w-full max-w-md p-6;
+    @apply rounded-2xl border border-slate-200 bg-white shadow-2xl w-full max-w-md p-6;
   }
   .modal-panel-lg {
-    @apply rounded-2xl border border-slate-100 bg-white shadow-2xl w-full max-w-lg p-6;
+    @apply rounded-2xl border border-slate-200 bg-white shadow-2xl w-full max-w-lg p-6;
   }
 }

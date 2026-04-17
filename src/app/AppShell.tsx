@@ -50,7 +50,7 @@ function NavItem({
       onClick={onClick}
       className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
         active
-          ? 'bg-blue-600 text-white shadow-sm'
+          ? 'bg-slate-900 text-white shadow-sm'
           : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
       }`}
     >
@@ -61,7 +61,7 @@ function NavItem({
       />
       <div className="min-w-0">
         <p className={`text-sm font-medium leading-tight ${active ? 'text-white' : ''}`}>{label}</p>
-        <p className={`text-[10px] leading-tight ${active ? 'text-blue-200' : 'text-slate-400'}`}>{sub}</p>
+        <p className={`text-[10px] leading-tight ${active ? 'text-slate-300' : 'text-slate-400'}`}>{sub}</p>
       </div>
     </button>
   )
@@ -75,7 +75,7 @@ export function AppShell() {
   const { session, logout, menuTree } = useAuth()
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 text-slate-900">
       {sidebarOpen && (
         <button
           type="button"
@@ -86,21 +86,21 @@ export function AppShell() {
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-40 flex h-screen w-56 flex-col border-r border-slate-100 bg-white transition-transform duration-200 ease-out ${
+        className={`fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-200 ease-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600">
-            <span className="text-sm font-bold text-white">₫</span>
+        <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900">
+            <span className="text-sm font-bold text-white">L</span>
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">FinTrack</p>
-            <p className="text-[10px] text-slate-400">Personal Finance</p>
+            <p className="text-sm font-semibold text-slate-900">LitEcoSystem</p>
+            <p className="text-[10px] text-slate-500">Personal Finance</p>
           </div>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 py-4">
+        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
           <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Menu</p>
           {NAV.map((item) => (
             <NavItem
@@ -117,7 +117,7 @@ export function AppShell() {
           ))}
         </nav>
 
-        <div className="border-t border-slate-100 px-4 py-3 space-y-2">
+        <div className="space-y-2 border-t border-slate-200 px-4 py-3">
           {session && (
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
@@ -146,10 +146,10 @@ export function AppShell() {
 
       <div
         className={`flex min-h-screen flex-1 flex-col transition-[margin] duration-200 ease-out ${
-          sidebarOpen ? 'md:ml-56' : 'md:ml-0'
+          sidebarOpen ? 'md:ml-64' : 'md:ml-0'
         } ml-0 pb-20 md:pb-0`}
       >
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-100 bg-white/90 px-4 backdrop-blur-md md:px-8">
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white/95 px-4 backdrop-blur md:px-6">
           <button
             type="button"
             onClick={() => setSidebarOpen((v) => !v)}
@@ -158,16 +158,17 @@ export function AppShell() {
           >
             <IconPanelLeft className="h-5 w-5" />
           </button>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-base font-semibold text-slate-900">{PAGE_LABELS[tab]}</h1>
-            <p className="text-xs text-slate-400">Quản lý tài chính cá nhân</p>
+            <p className="truncate text-xs text-slate-500">Quản lý tài chính cá nhân</p>
           </div>
         </header>
 
-        <main className="flex-1 p-6 md:p-8">
+        <main className="flex-1 p-4 md:p-6">
+          <div className="mx-auto w-full max-w-7xl">
           {apiLoading ? (
             <div className="flex items-center justify-center gap-3 py-24 text-slate-500">
-              <svg className="h-5 w-5 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24">
+              <svg className="h-5 w-5 animate-spin text-slate-700" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
@@ -182,10 +183,11 @@ export function AppShell() {
               {tab === 'access' && <AccessControlView />}
             </>
           )}
+          </div>
         </main>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-slate-100 bg-white md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-slate-200 bg-white md:hidden">
         {NAV.map((item) => {
           const active = tab === item.id
           return (
@@ -194,10 +196,10 @@ export function AppShell() {
               type="button"
               onClick={() => setTab(item.id)}
               className={`flex flex-1 flex-col items-center gap-1 py-3 text-[10px] font-medium transition ${
-                active ? 'text-blue-600' : 'text-slate-400'
+                active ? 'text-slate-900' : 'text-slate-400'
               }`}
             >
-              <item.icon className={`h-5 w-5 ${active ? 'text-blue-600' : 'text-slate-400'}`} />
+              <item.icon className={`h-5 w-5 ${active ? 'text-slate-900' : 'text-slate-400'}`} />
               <span className="truncate px-0.5">{item.label}</span>
             </button>
           )

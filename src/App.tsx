@@ -1,24 +1,20 @@
-import { AuthProvider } from './app/auth/AuthContext'
-import { useAuth } from './app/auth/useAuth'
-import { PfmProvider } from './app/PfmProvider'
-import { AppShell } from './app/AppShell'
-import { LoginPage } from './features/auth/LoginPage'
+import { AuthProvider, useAuth, QueryProvider } from './app/providers'
+import { FinancePage } from './pages/finance'
+import { LoginPage } from './pages/login'
 
 function AppRouter() {
   const { session } = useAuth()
   if (!session) return <LoginPage />
-  return (
-    <PfmProvider>
-      <AppShell />
-    </PfmProvider>
-  )
+  return <FinancePage />
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRouter />
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
+    </QueryProvider>
   )
 }
 

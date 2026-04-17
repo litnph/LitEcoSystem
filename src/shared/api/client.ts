@@ -1,4 +1,4 @@
-import { clearSession, loadSession, saveSession } from '../../app/auth/authStorage'
+import { clearSession, loadSession, saveSession } from '../lib/auth-storage'
 
 const RAW_API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'https://litecosysapi.onrender.com/api'
 const API_BASE = RAW_API_BASE.replace(/\/+$/, '')

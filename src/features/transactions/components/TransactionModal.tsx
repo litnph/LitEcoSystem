@@ -1,0 +1,373 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { Transaction } from '../../../entities'
+import { useTransactionForm } from '../hooks/useTransactionForm'
+import { IconPlus, IconX } from '../../../shared/ui/Icon'
+
+type Props = {
+  editingTx: Transaction | null
+  onClose: () => void
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="form-field">
+      <label className="form-label">{label}</label>
+      {children}
+    </div>
+  )
+}
+
+export function TransactionModal({ editingTx, onClose }: Props) {
+  const f = useTransactionForm(editingTx, onClose)
+  const [categorySearch, setCategorySearch] = useState('')
+  const [categoryPickerOpen, setCategoryPickerOpen] = useState(false)
+  const categoryPickerRef = useRef<HTMLDivElement | null>(null)
+  const categoryGroups = useMemo(
+    () =>
+      f.categories.reduce<Record<string, string[]>>((acc, item) => {
+        const [parent, child] = item.split('/')
+        const p = parent || 'Khác'
+        const c = child || item
+        if (!acc[p]) acc[p] = []
+        if (!acc[p].includes(c)) acc[p].push(c)
+        return acc
+      }, {}),
+    [f.categories],
+  )
+  const parentOptions = Object.keys(categoryGroups)
+  const [currentParentRaw, currentChildRaw] = f.form.category.split('/')
+  const currentParent =
+    (currentParentRaw && categoryGroups[currentParentRaw] && currentParentRaw) || ''
+  const currentChild =
+    (currentChildRaw && (categoryGroups[currentParent] ?? []).includes(currentChildRaw) && currentChildRaw) || ''
+
+  const filteredCategoryGroups = useMemo(() => {
+    const query = categorySearch.trim().toLowerCase()
+    if (!query) {
+      return parentOptions.map((parent) => ({ parent, children: categoryGroups[parent] ?? [] }))
+    }
+    return parentOptions
+      .map((parent) => {
+        const children = categoryGroups[parent] ?? []
+        const parentMatched = parent.toLowerCase().includes(query)
+        if (parentMatched) return { parent, children }
+        return {
+          parent,
+          children: children.filter((child) => child.toLowerCase().includes(query)),
+        }
+      })
+      .filter((group) => group.children.length > 0)
+  }, [categoryGroups, categorySearch, parentOptions])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node
+      if (!categoryPickerRef.current?.contains(target)) {
+        setCategoryPickerOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  return (
+    <div className="modal-backdrop">
+      <div
+        className="modal-panel-lg max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <h2 className="text-base font-semibold text-slate-900">
+              {f.isEditing ? 'Sửa giao dịch' : 'Thêm giao dịch mới'}
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {f.isEditing ? 'Chỉnh sửa thông tin giao dịch' : 'Nhập thông tin giao dịch mới'}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100"
+          >
+            <IconX />
+          </button>
+        </div>
+
+        <div className="mt-4 space-y-4">
+          {/* Type toggle */}
+          <Field label="Loại giao dịch">
+            <div className="flex overflow-hidden rounded-xl border border-slate-200">
+              {(['expense', 'income'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => f.update('type', t)}
+                  className={`flex-1 py-2.5 text-sm font-semibold transition ${
+                    f.form.type === t
+                      ? t === 'expense'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-emerald-600 text-white'
+                      : 'text-slate-500 hover:bg-slate-50'
+                  }`}
+                >
+                  {t === 'expense' ? '↑ Chi tiêu' : '↓ Thu nhập'}
+                </button>
+              ))}
+            </div>
+          </Field>
+
+          {!f.isEditing && (
+            <Field label="Chi hộ">
+              <button
+                type="button"
+                onClick={() => f.update('isAdvancePayment', !f.form.isAdvancePayment)}
+                className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:bg-slate-100"
+              >
+                <span className="text-sm font-medium text-slate-700">Bật chi hộ</span>
+                <span
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                    f.form.isAdvancePayment ? 'bg-amber-500' : 'bg-slate-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                      f.form.isAdvancePayment ? 'translate-x-5' : 'translate-x-1'
+                    }`}
+                  />
+                </span>
+              </button>
+            </Field>
+          )}
+
+          {!f.isEditing && f.form.isAdvancePayment && (
+            <div className="space-y-3 rounded-xl border border-amber-200 bg-amber-50/40 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-amber-800">Danh sách chi hộ</p>
+                <button type="button" className="btn-ghost btn-sm" onClick={f.addAdvanceItem}>
+                  <IconPlus className="h-3.5 w-3.5" />
+                  Thêm người
+                </button>
+              </div>
+              {f.form.advanceItems.map((item, idx) => (
+                <div
+                  key={`adv-${idx}`}
+                  className="grid grid-cols-1 gap-2 rounded-lg border border-amber-100 bg-white p-3 md:grid-cols-[1.1fr_1fr_1fr_auto] md:items-end"
+                >
+                  <div className="form-field">
+                    <label className="form-label">Chi hộ cho ai</label>
+                    <input
+                      value={item.person}
+                      onChange={(e) => f.updateAdvanceItem(idx, 'person', e.target.value)}
+                      placeholder="Tên đồng nghiệp / bạn bè"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label className="form-label">Số tiền chi hộ (VND)</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={item.amount}
+                      onChange={(e) => f.updateAdvanceItem(idx, 'amount', e.target.value)}
+                      placeholder="400,000"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label className="form-label">Hạn thu hồi</label>
+                    <input
+                      type="date"
+                      value={item.dueDate}
+                      onChange={(e) => f.updateAdvanceItem(idx, 'dueDate', e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-ghost btn-sm text-red-600 md:mb-0.5"
+                    onClick={() => f.removeAdvanceItem(idx)}
+                    title="Xóa dòng"
+                  >
+                    Xóa
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Field label="Số tiền (VND)">
+            <input
+              type="text"
+              inputMode="numeric"
+              value={f.form.amount}
+              onChange={(e) => f.update('amount', e.target.value)}
+              placeholder="500,000"
+              className="form-input text-lg font-semibold"
+              autoFocus
+            />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Ngày">
+              <input
+                type="date"
+                value={f.form.occurredAt}
+                onChange={(e) => f.update('occurredAt', e.target.value)}
+                className="form-input"
+              />
+            </Field>
+            <div className="form-field">
+              <label className="form-label">Phân loại</label>
+              <div className="relative space-y-2" ref={categoryPickerRef}>
+                <button
+                  type="button"
+                  className="form-input flex items-center justify-between text-left"
+                  onClick={() => {
+                    setCategoryPickerOpen((prev) => !prev)
+                    if (!categoryPickerOpen) setCategorySearch('')
+                  }}
+                >
+                  <span className={currentParent && currentChild ? 'text-slate-700' : 'text-slate-400'}>
+                    {currentParent && currentChild
+                      ? currentChild
+                      : 'Chọn phân loại'}
+                  </span>
+                  <span className="text-xs text-slate-400">{categoryPickerOpen ? '▲' : '▼'}</span>
+                </button>
+                {categoryPickerOpen && (
+                  <div className="absolute z-50 mt-1 w-full max-w-full rounded-xl border border-slate-200 bg-white p-2 shadow-xl">
+                    <input
+                      value={categorySearch}
+                      onChange={(e) => setCategorySearch(e.target.value)}
+                      placeholder="Tìm phân loại (vd: xăng, ăn, di chuyển...)"
+                      className="form-input mb-2"
+                      autoFocus
+                    />
+                    <div className="max-h-64 overflow-y-auto rounded-lg border border-slate-100 bg-slate-50/40 p-2">
+                      {filteredCategoryGroups.length === 0 ? (
+                        <p className="px-2 py-1 text-xs text-slate-400">Không tìm thấy phân loại phù hợp.</p>
+                      ) : (
+                        filteredCategoryGroups.map(({ parent, children }) => (
+                          <div key={parent} className="mb-2 last:mb-0">
+                            <p className="rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-700">
+                              {parent}
+                            </p>
+                            <div className="mt-1 space-y-1">
+                              {children.map((child) => {
+                                const value = `${parent}/${child}`
+                                const selected = f.form.category === value
+                                return (
+                                  <button
+                                    key={value}
+                                    type="button"
+                                    className={`w-full rounded-lg px-2 py-1.5 text-left text-sm transition ${
+                                      selected
+                                        ? 'bg-blue-50 font-semibold text-blue-700'
+                                        : 'bg-white text-slate-700 hover:bg-slate-50'
+                                    }`}
+                                    onClick={() => {
+                                      f.update('category', value)
+                                      setCategoryPickerOpen(false)
+                                    }}
+                                  >
+                                    {child}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+                <p className="text-xs text-slate-500">
+                  Đã chọn:{' '}
+                  {currentParent && currentChild ? (
+                    <span className="font-medium text-slate-700">
+                      {currentParent} / {currentChild}
+                    </span>
+                  ) : (
+                    <span className="text-amber-700">Chưa chọn phân loại</span>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Field label="Mô tả / đối tác">
+            <input
+              value={f.form.merchant}
+              onChange={(e) => f.update('merchant', e.target.value)}
+              placeholder="Grab, Shopee, siêu thị..."
+              className="form-input"
+            />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Kênh">
+              <select
+                value={f.form.channel}
+                onChange={(e) => f.update('channel', e.target.value)}
+                className="form-select"
+              >
+                {f.channels.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Nguồn tiền">
+              <select
+                value={f.form.source}
+                onChange={(e) => f.update('source', e.target.value)}
+                className="form-select"
+              >
+                {f.sources.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+          </div>
+
+          {f.form.type === 'expense' && (
+            <Field label="Hình thức">
+              <div className={`rounded-xl border px-3 py-2 text-sm font-medium ${
+                f.sourceMode === 'bnpl'
+                  ? 'border-blue-100 bg-blue-50 text-blue-700'
+                  : 'border-slate-200 bg-slate-50 text-slate-600'
+              }`}>
+                {f.sourceMode === 'bnpl' ? 'Mua trước trả sau (BNPL)' : 'Trả liền'}
+              </div>
+            </Field>
+          )}
+
+          <Field label="Ghi chú (tuỳ chọn)">
+            <input
+              value={f.form.note}
+              onChange={(e) => f.update('note', e.target.value)}
+              className="form-input"
+            />
+          </Field>
+
+          {f.error && (
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+              {f.error}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-5 flex gap-3 border-t border-slate-100 pt-4">
+          <button type="button" onClick={onClose} className="btn-ghost flex-1">
+            Hủy
+          </button>
+          <button
+            type="button"
+            onClick={() => { void f.submit() }}
+            disabled={f.submitting}
+            className="btn-primary flex-1 disabled:opacity-60"
+          >
+            {f.submitting ? 'Đang lưu...' : f.isEditing ? 'Cập nhật' : 'Lưu giao dịch'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}

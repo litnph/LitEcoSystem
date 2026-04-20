@@ -5,7 +5,6 @@ export type CalendarRulesApiDto = {
   paymentDueDay: number
   salaryFromDay: number
   salaryToDay: number
-  installmentMinAmount: number
 }
 
 export type MasterDataApiDto = {

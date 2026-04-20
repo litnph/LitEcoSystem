@@ -1,4 +1,4 @@
-import { AuthProvider, useAuth, QueryProvider } from './app/providers'
+import { ApiErrorProvider, AuthProvider, QueryProvider, useAuth } from './app/providers'
 import { FinancePage } from './pages/finance'
 import { LoginPage } from './pages/login'
 
@@ -10,11 +10,13 @@ function AppRouter() {
 
 function App() {
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <AppRouter />
-      </AuthProvider>
-    </QueryProvider>
+    <ApiErrorProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
+      </QueryProvider>
+    </ApiErrorProvider>
   )
 }
 

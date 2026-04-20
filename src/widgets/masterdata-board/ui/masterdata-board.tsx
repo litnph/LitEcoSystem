@@ -307,14 +307,17 @@ function SourcePanel({ draft, setDraft }: { draft: DraftState; setDraft: (fn: (d
         </div>
       </div>
       <div className="form-field">
-        <label className="form-label">Hạn mức chuyển đổi trả góp</label>
+        <label className="form-label">Hạn mức tối thiểu để chuyển đổi trả góp</label>
         <div className="relative">
           <input type="text" inputMode="numeric" value={installmentLimit}
             onChange={(e) => setInstallmentLimit(e.target.value.replace(/[^0-9]/g, ''))}
-            placeholder="Bỏ trống = không giới hạn" className="form-input pr-12" />
+            placeholder="Bỏ trống = không yêu cầu tối thiểu" className="form-input pr-12" />
           <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9E8E7C]">VND</span>
         </div>
-        <p className="mt-1 text-[11px] text-[#9E8E7C]">Giao dịch có giá trị vượt hạn mức này sẽ không được phép chuyển sang trả góp.</p>
+        <p className="mt-1 text-[11px] text-[#9E8E7C]">
+          Chỉ giao dịch có giá trị từ hạn mức này trở lên mới được phép chuyển sang trả góp.
+          Mỗi nguồn tiền trả sau có một hạn mức tối thiểu riêng.
+        </p>
       </div>
     </div>
   )
@@ -396,8 +399,8 @@ function SourcePanel({ draft, setDraft }: { draft: DraftState; setDraft: (fn: (d
                         <span className="text-[11px] text-[#9E8E7C]">Hạn ngày <strong className="text-[#3E3025]">{dd ?? '—'}</strong></span>
                         <span className="text-[#C4B5A5]">·</span>
                         <span className="text-[11px] text-[#9E8E7C]">
-                          Hạn mức trả góp{' '}
-                          <strong className="text-[#3E3025]">{lim != null ? lim.toLocaleString('vi-VN') + ' đ' : 'Không giới hạn'}</strong>
+                          Hạn mức tối thiểu{' '}
+                          <strong className="text-[#3E3025]">{lim != null ? lim.toLocaleString('vi-VN') + ' đ' : 'Không yêu cầu'}</strong>
                         </span>
                       </div>
                     </div>

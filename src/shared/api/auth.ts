@@ -15,7 +15,6 @@ export type LoginResponse = {
     fullName: string
     email: string
     preferredLanguage: string
-    roles: string[]
   }
 }
 

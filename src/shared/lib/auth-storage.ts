@@ -6,7 +6,6 @@ export type AuthSession = {
   displayName: string
   email: string
   preferredLanguage: string
-  roles: string[]
   accessToken: string
   refreshToken: string
   accessTokenExpiry: string

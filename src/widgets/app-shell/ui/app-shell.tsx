@@ -12,7 +12,7 @@ const NAV: { id: AppTab; label: string; sub: string; icon: React.FC<{ className?
   { id: 'obligations', label: 'Nợ & Trả góp', sub: 'Quản lý nghĩa vụ', icon: IconLandmark },
   { id: 'payments', label: 'Thanh toán', sub: 'Sao kê BNPL', icon: IconLandmark },
   { id: 'masterdata', label: 'Cấu hình', sub: 'Lịch & danh mục', icon: IconSettings },
-  { id: 'access', label: 'User & Role', sub: 'Phân quyền', icon: IconUsers },
+  { id: 'access', label: 'User', sub: 'Quản trị người dùng', icon: IconUsers },
 ]
 
 const PAGE_LABELS: Record<AppTab, string> = {
@@ -21,7 +21,7 @@ const PAGE_LABELS: Record<AppTab, string> = {
   obligations: 'Nợ & Trả góp',
   payments: 'Thanh toán sao kê',
   masterdata: 'Cấu hình',
-  access: 'Quản lý user & phân quyền',
+  access: 'Quản lý user',
 }
 
 function NavItem({ label, sub, icon: Icon, active, onClick }: {

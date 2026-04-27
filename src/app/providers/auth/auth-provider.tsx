@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         displayName: result.user.fullName,
         email: result.user.email,
         preferredLanguage: result.user.preferredLanguage,
-        roles: result.user.roles ?? [],
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
         accessTokenExpiry: result.accessTokenExpiry,

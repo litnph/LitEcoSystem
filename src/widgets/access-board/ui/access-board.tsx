@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getUsersApi, type UserApiDto } from '@/shared/api/users'
+import {
+  createUserApi,
+  deleteUserApi,
+  getUsersApi,
+  setUserStatusApi,
+  updateUserApi,
+  type UserApiDto,
+} from '@/shared/api/users'
 import { ApiError } from '@/shared/api/client'
-import { useAuth } from '@/app/providers/auth/use-auth'
+import { ConfirmDialog } from '@/shared/ui/ConfirmDialog'
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
@@ -13,56 +20,164 @@ function StatCard({ label, value }: { label: string; value: number }) {
 }
 
 export function AccessBoard() {
-  const { session } = useAuth()
   const [users, setUsers] = useState<UserApiDto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [createForm, setCreateForm] = useState({
+    username: '',
+    password: '',
+    email: '',
+    fullName: '',
+  })
+  const [editForm, setEditForm] = useState({
+    email: '',
+    fullName: '',
+  })
+  const [selectedUser, setSelectedUser] = useState<UserApiDto | null>(null)
+  const [openCreate, setOpenCreate] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [confirmDeleteUser, setConfirmDeleteUser] = useState<UserApiDto | null>(null)
+  const [confirmStatusUser, setConfirmStatusUser] = useState<UserApiDto | null>(null)
+  const [formError, setFormError] = useState('')
+  const [infoModal, setInfoModal] = useState<{ title: string; message: string } | null>(null)
+
+  async function reloadUsers() {
+    const data = await getUsersApi()
+    setUsers(data)
+  }
 
   useEffect(() => {
     let isMounted = true
     void getUsersApi()
       .then((data) => { if (isMounted) setUsers(data) })
-      .catch((err: unknown) => {
-        if (!isMounted) return
-        if (err instanceof ApiError && err.status === 403) { setError('Bạn không có quyền xem danh sách user.'); return }
-        setError('Không thể tải dữ liệu user từ API.')
+      .catch(() => {
+        if (isMounted) setError('Không thể tải dữ liệu user từ API.')
       })
       .finally(() => { if (isMounted) setLoading(false) })
     return () => { isMounted = false }
   }, [])
 
-  const roles = useMemo(() => {
-    const roleSet = new Set<string>()
-    for (const user of users) for (const role of user.roles ?? []) roleSet.add(role)
-    if (roleSet.size === 0 && session?.roles?.length) for (const role of session.roles) roleSet.add(role)
-    return Array.from(roleSet).sort((a, b) => a.localeCompare(b))
-  }, [session, users])
+  const activeUsers = useMemo(() => users.filter((u) => u.isActive).length, [users])
+
+  async function onCreateUser() {
+    if (!createForm.email.trim() || !createForm.fullName.trim()) {
+      setFormError('Vui lòng nhập đầy đủ họ tên và email.')
+      return
+    }
+
+    if (!createForm.username.trim() || !createForm.password) {
+      setFormError('Khi tạo mới cần nhập username và mật khẩu.')
+      return
+    }
+
+    try {
+      setBusy(true)
+      setFormError('')
+      await createUserApi({
+        username: createForm.username.trim(),
+        password: createForm.password,
+        email: createForm.email.trim(),
+        fullName: createForm.fullName.trim(),
+      })
+      await reloadUsers()
+      setOpenCreate(false)
+      setCreateForm({ username: '', password: '', email: '', fullName: '' })
+      setInfoModal({ title: 'Thành công', message: 'Đã tạo user mới.' })
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        setFormError(err.message)
+        return
+      }
+      setFormError('Không thể lưu user.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  function openEditModal(user: UserApiDto) {
+    setSelectedUser(user)
+    setEditForm({ email: user.email, fullName: user.fullName })
+    setFormError('')
+    setOpenEdit(true)
+  }
+
+  async function onEditUser() {
+    if (!selectedUser) return
+    if (!editForm.email.trim() || !editForm.fullName.trim()) {
+      setFormError('Vui lòng nhập đầy đủ họ tên và email.')
+      return
+    }
+    try {
+      setBusy(true)
+      setFormError('')
+      await updateUserApi(selectedUser.id, {
+        email: editForm.email.trim(),
+        fullName: editForm.fullName.trim(),
+      })
+      await reloadUsers()
+      setOpenEdit(false)
+      setSelectedUser(null)
+      setInfoModal({ title: 'Thành công', message: 'Đã cập nhật user.' })
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        setFormError(err.message)
+        return
+      }
+      setFormError('Không thể cập nhật user.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function confirmDelete() {
+    if (!confirmDeleteUser) return
+    try {
+      setBusy(true)
+      await deleteUserApi(confirmDeleteUser.id)
+      await reloadUsers()
+      setConfirmDeleteUser(null)
+      setInfoModal({ title: 'Thành công', message: 'Đã xóa user.' })
+    } catch {
+      setError('Không thể xóa user.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function confirmSetStatus() {
+    if (!confirmStatusUser) return
+    try {
+      setBusy(true)
+      await setUserStatusApi(confirmStatusUser.id, !confirmStatusUser.isActive)
+      await reloadUsers()
+      setConfirmStatusUser(null)
+      setInfoModal({ title: 'Thành công', message: 'Đã cập nhật trạng thái user.' })
+    } catch {
+      setError('Không thể cập nhật trạng thái user.')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-base font-semibold text-[#2C2215]">Quản lý user & phân quyền</h2>
-        <p className="text-xs text-[#9E8E7C]">Dữ liệu lấy từ API user/role. Chỉnh sửa quyền sẽ bổ sung ở bước tiếp theo.</p>
+        <h2 className="text-base font-semibold text-[#2C2215]">Quản lý user</h2>
+        <p className="text-xs text-[#9E8E7C]">Thêm, sửa, xóa và active/deactive user.</p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <StatCard label="Tổng user" value={users.length} />
-        <StatCard label="User đang active" value={users.filter((u) => u.isActive).length} />
-        <StatCard label="Số role" value={roles.length} />
+        <StatCard label="User đang active" value={activeUsers} />
       </div>
 
       <div className="card p-5">
-        <h3 className="text-sm font-semibold text-[#2C2215]">Danh sách role</h3>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {roles.length > 0 ? (
-            roles.map((role) => (
-              <span key={role} className="rounded-full border border-[#D4C9BE] bg-[#EFE3D2] px-3 py-1 text-xs font-semibold text-[#7A5E3E]">
-                {role}
-              </span>
-            ))
-          ) : (
-            <p className="text-xs text-[#9E8E7C]">Chưa có role nào.</p>
-          )}
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-[#2C2215]">Danh sách user</h3>
+          <button type="button" className="btn-primary btn-sm" onClick={() => { setFormError(''); setOpenCreate(true) }}>
+            Thêm user
+          </button>
         </div>
       </div>
 
@@ -83,8 +198,8 @@ export function AccessBoard() {
                 <tr>
                   <th className="px-5 py-3 text-left">User</th>
                   <th className="px-5 py-3 text-left">Email</th>
-                  <th className="px-5 py-3 text-left">Quyền</th>
                   <th className="px-5 py-3 text-left">Trạng thái</th>
+                  <th className="px-5 py-3 text-left">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#EDE6DC] bg-white">
@@ -96,22 +211,18 @@ export function AccessBoard() {
                     </td>
                     <td className="px-5 py-3 text-[#6B5B48]">{user.email}</td>
                     <td className="px-5 py-3">
-                      <div className="flex flex-wrap gap-1.5">
-                        {(user.roles ?? []).length > 0 ? (
-                          user.roles.map((role) => (
-                            <span key={`${user.id}-${role}`} className="rounded-md border border-[#E4D9CE] px-2 py-0.5 text-xs text-[#6B5B48]">
-                              {role}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="text-xs text-[#9E8E7C]">Chưa gán quyền</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3">
                       <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${user.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-[#EDE6DC] text-[#9E8E7C]'}`}>
                         {user.isActive ? 'Active' : 'Inactive'}
                       </span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <div className="flex gap-2">
+                        <button type="button" className="btn-ghost btn-sm" onClick={() => openEditModal(user)} disabled={busy}>Sửa</button>
+                        <button type="button" className="btn-ghost btn-sm" onClick={() => setConfirmStatusUser(user)} disabled={busy}>
+                          {user.isActive ? 'Deactive' : 'Active'}
+                        </button>
+                        <button type="button" className="btn-danger btn-sm" onClick={() => setConfirmDeleteUser(user)} disabled={busy}>Xóa</button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -120,6 +231,95 @@ export function AccessBoard() {
           </div>
         )}
       </div>
+
+      {openCreate && (
+        <div className="modal-backdrop" onClick={() => setOpenCreate(false)}>
+          <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-semibold text-[#2C2215]">Thêm user</h3>
+            <div className="mt-4 space-y-3">
+              <div className="form-field">
+                <label className="form-label">Username</label>
+                <input value={createForm.username} onChange={(e) => setCreateForm((p) => ({ ...p, username: e.target.value }))} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Mật khẩu</label>
+                <input type="password" value={createForm.password} onChange={(e) => setCreateForm((p) => ({ ...p, password: e.target.value }))} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Họ và tên</label>
+                <input value={createForm.fullName} onChange={(e) => setCreateForm((p) => ({ ...p, fullName: e.target.value }))} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Email</label>
+                <input value={createForm.email} onChange={(e) => setCreateForm((p) => ({ ...p, email: e.target.value }))} className="form-input" />
+              </div>
+              {formError && <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{formError}</p>}
+            </div>
+            <div className="mt-5 flex gap-3">
+              <button type="button" className="btn-ghost flex-1" onClick={() => setOpenCreate(false)}>Hủy</button>
+              <button type="button" className="btn-primary flex-1" onClick={() => { void onCreateUser() }} disabled={busy}>Lưu</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {openEdit && selectedUser && (
+        <div className="modal-backdrop" onClick={() => setOpenEdit(false)}>
+          <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-semibold text-[#2C2215]">Sửa user</h3>
+            <div className="mt-4 space-y-3">
+              <div className="form-field">
+                <label className="form-label">Username</label>
+                <input value={selectedUser.username} className="form-input opacity-60" disabled />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Họ và tên</label>
+                <input value={editForm.fullName} onChange={(e) => setEditForm((p) => ({ ...p, fullName: e.target.value }))} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Email</label>
+                <input value={editForm.email} onChange={(e) => setEditForm((p) => ({ ...p, email: e.target.value }))} className="form-input" />
+              </div>
+              {formError && <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{formError}</p>}
+            </div>
+            <div className="mt-5 flex gap-3">
+              <button type="button" className="btn-ghost flex-1" onClick={() => setOpenEdit(false)}>Hủy</button>
+              <button type="button" className="btn-primary flex-1" onClick={() => { void onEditUser() }} disabled={busy}>Lưu</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={!!confirmDeleteUser}
+        title="Xác nhận xóa user"
+        message={confirmDeleteUser ? `Bạn muốn xóa user "${confirmDeleteUser.username}"?` : ''}
+        confirmText="Xóa"
+        tone="danger"
+        onCancel={() => setConfirmDeleteUser(null)}
+        onConfirm={() => { void confirmDelete() }}
+      />
+
+      <ConfirmDialog
+        open={!!confirmStatusUser}
+        title="Xác nhận cập nhật trạng thái"
+        message={confirmStatusUser ? `Bạn muốn ${confirmStatusUser.isActive ? 'deactive' : 'active'} user "${confirmStatusUser.username}"?` : ''}
+        confirmText="Xác nhận"
+        onCancel={() => setConfirmStatusUser(null)}
+        onConfirm={() => { void confirmSetStatus() }}
+      />
+
+      {infoModal && (
+        <div className="modal-backdrop" onClick={() => setInfoModal(null)}>
+          <div className="modal-panel max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-semibold text-[#2C2215]">{infoModal.title}</h3>
+            <p className="mt-2 text-sm text-[#6B5B48]">{infoModal.message}</p>
+            <div className="mt-6 flex">
+              <button type="button" onClick={() => setInfoModal(null)} className="btn-primary w-full">Đóng</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
